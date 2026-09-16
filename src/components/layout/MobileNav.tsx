@@ -3,11 +3,7 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { cx } from "@/components/ui";
-
-export type NavItem = {
-  href: string;
-  label: string;
-};
+import type { NavItem } from "./nav-links";
 
 type MobileNavProps = {
   isOpen: boolean;

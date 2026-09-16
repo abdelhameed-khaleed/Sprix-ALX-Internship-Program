@@ -5,16 +5,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { Lockup } from "./Lockup";
-import { MobileNav, type NavItem } from "./MobileNav";
+import { MobileNav } from "./MobileNav";
+import { NAV_LINKS } from "./nav-links";
 import { cx } from "@/components/ui";
-
-export const NAV_LINKS: readonly NavItem[] = [
-  { href: "/", label: "Home" },
-  { href: "/program", label: "Program" },
-  { href: "/resources", label: "Resources" },
-  { href: "/leaderboard", label: "Leaderboard" },
-  { href: "/team", label: "Team" },
-] as const;
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);

@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ExternalLink } from "lucide-react";
 import { Lockup } from "./Lockup";
-import { NAV_LINKS } from "./Header";
+import { NAV_LINKS } from "./nav-links";
 import { site } from "@/content/site";
 
 export function Footer() {
