@@ -2,7 +2,17 @@
 
 **Feature Branch**: `001-learner-hub`
 **Created**: 2026-09-16
-**Status**: Draft
+**Status**: Approved, amended 2026-09-16
+
+> **Amendment (2026-09-16), confirmed with the ALX team.** It overrides the text below wherever they conflict.
+> - **7 weeks**: W1–W6 learning (Sun 20 Sep – Sat 31 Oct 2026), W7 (1 Nov) Demo & Graduation. No Week 0.
+> - **Weekly cadence**: Tue 6:00 PM online walkthrough (Zoom) · Fri 4:00 PM offline workshop (ALX Hub) · Sun 11:59 PM submission deadline on **Savanna** (the ALX LMS). All times are Cairo time.
+> - **Completion requirements**: LMS coursework, attendance at all weekly sessions, and delivering the mastery project at Pitching Day.
+> - **Links**: only alxafrica.com is public. Savanna access is shared privately, and there's no community channel link yet.
+> - **Team**: one contact, Abdelhameed Khaled ("Hamedo"), ALX Experience Analyst and main point of contact. WhatsApp action only; the phone number is never shown as text.
+> - **Resources**: Savanna and alxafrica.com at launch; more are added weekly.
+> - **Leaderboard**: shows a "coming soon" state until the Google Sheet URL is configured.
+> - Expert-session topics and deliverables per week are carried over from the proposal. Course codes (PF-1…) are dropped.
 **Input**: User description: "A simple, Vercel-hosted website for the ALX × SPRIX Edutech 6-week
 Professional Development Internship Program where learners can find resources, understand the
 program structure, contact the team, see a weekly top-performers leaderboard, and land on a

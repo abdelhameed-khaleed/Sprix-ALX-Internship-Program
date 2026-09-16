@@ -3,6 +3,8 @@
 **Input**: Design documents from `/specs/001-learner-hub/`
 **Prerequisites**: plan.md, spec.md
 
+**Progress (2026-09-16)**: Setup and foundation done by Claude: scaffold, tokens, content (7-week structure per the spec amendment), current-week and leaderboard logic with 12 tests, and UI primitives. Layout + Home (T007–T011, T015–T016, T022) and the Program/Resources/Leaderboard/Team pages (T013–T014, T020–T021, T025–T026, T029–T030) are delegated to two parallel agy runs.
+
 **Format**: `[ID] [P?] [Story] [Owner] Description`
 - **[P]**: can run in parallel (different files, no dependencies)
 - **Owner**: `C` = Claude · `G` = delegated to agy / gemini-3.8-flash-high, reviewed by Claude
