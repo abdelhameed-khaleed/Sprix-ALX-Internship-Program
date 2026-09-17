@@ -15,6 +15,9 @@ export const site = {
     // No public URL yet: access details are shared with learners directly.
     url: undefined as string | undefined,
   },
+  support: {
+    ticketUrl: "https://help.alxafrica.com/en/support/tickets/new",
+  },
   links: {
     alx: "https://www.alxafrica.com/",
   },

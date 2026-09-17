@@ -1,7 +1,8 @@
 import Image from "next/image";
-import { Mail, MessageCircle } from "lucide-react";
+import { Mail } from "lucide-react";
 import type { TeamMember } from "@/content/team";
 import { Badge, ButtonLink, Card, cx } from "@/components/ui";
+import { WhatsAppIcon } from "./WhatsAppIcon";
 
 type MemberCardProps = {
   member: TeamMember;
@@ -92,18 +93,17 @@ export function MemberCard({ member, isSingle = false }: MemberCardProps) {
           {/* Contact Actions (phone number NEVER rendered as text) */}
           <div className="mt-6 flex flex-wrap gap-3">
             {member.whatsapp && (
-              <ButtonLink
+              // WhatsApp colors (#25D366 bg, #1EBE5A hover, #0B141A text) are an intentional third-party brand exception; dark text satisfies WCAG AA contrast.
+              <a
                 href={member.whatsapp}
-                external
-                variant="primary"
-                className="group/whatsapp w-full sm:w-auto"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group/whatsapp inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-button bg-[#25D366] px-5 py-2.5 text-base font-semibold text-[#0B141A] shadow-e1 transition-[background-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:bg-[#1EBE5A] hover:shadow-e2 sm:w-auto"
               >
-                <MessageCircle
-                  className="size-5 transition-transform duration-200 ease-out group-hover/whatsapp:scale-110 group-hover/whatsapp:-rotate-6"
-                  aria-hidden="true"
-                />
-                Message on WhatsApp
-              </ButtonLink>
+                <WhatsAppIcon className="size-5 shrink-0 transition-transform duration-200 ease-out group-hover/whatsapp:scale-110 group-hover/whatsapp:-rotate-6" />
+                <span>Message on WhatsApp</span>
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
             )}
 
             {member.email && (

@@ -9,5 +9,5 @@ export const NAV_LINKS: readonly NavItem[] = [
   { href: "/program", label: "Program" },
   { href: "/resources", label: "Resources" },
   { href: "/leaderboard", label: "Leaderboard" },
-  { href: "/team", label: "Team" },
+  { href: "/support", label: "Support" },
 ];

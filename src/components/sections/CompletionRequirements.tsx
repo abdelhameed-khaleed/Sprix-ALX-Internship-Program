@@ -112,8 +112,8 @@ export function CompletionRequirements({ variant = "page" }: CompletionRequireme
                 See the full program
               </ButtonLink>
             ) : (
-              <ButtonLink href="/team" variant="inverse">
-                Questions? Contact the team
+              <ButtonLink href="/support" variant="inverse">
+                Questions? Get support
               </ButtonLink>
             )}
           </div>
