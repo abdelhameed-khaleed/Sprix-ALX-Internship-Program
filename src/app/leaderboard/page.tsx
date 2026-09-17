@@ -1,42 +1,37 @@
 import type { Metadata } from "next";
-import { Info } from "lucide-react";
+import { Info, TrendingUp } from "lucide-react";
 import { ButtonLink, Card, EmptyState, PageHero, Section } from "@/components/ui";
-import { getLeaderboard } from "@/lib/leaderboard";
-import { WeekSelect } from "@/components/leaderboard/WeekSelect";
+import { getLeaderboard, OVERALL_TOP_N, WEEKLY_TOP_N } from "@/lib/leaderboard";
+import { WeeklyStandings } from "@/components/leaderboard/WeeklyStandings";
 import { Podium } from "@/components/leaderboard/Podium";
-import { RankTable } from "@/components/leaderboard/RankTable";
 import { Reveal } from "@/components/motion/Reveal";
 
 export const revalidate = 900;
 
 export const metadata: Metadata = {
   title: "Leaderboard",
-  description:
-    "Weekly top performers and rankings for the ALX × SPRIX Professional Skills Program.",
+  description: "Weekly top 3 and overall top 5 standings for the ALX × SPRIX Professional Skills Program.",
 };
 
 type PageProps = {
-  searchParams: Promise<{
-    week?: string;
-  }>;
+  searchParams: Promise<{ week?: string }>;
+};
+
+const HERO = {
+  eyebrow: "Leaderboard",
+  title: "Top performers",
+  intro: "Celebrating learners who show up, do the work and lift others up.",
+  pattern: "/brand/patterns/Group-462.png",
 };
 
 export default async function LeaderboardPage({ searchParams }: PageProps) {
   const board = await getLeaderboard();
   const params = await searchParams;
 
-  const isUnavailable = board.status === "unavailable" || board.weeks.length === 0;
-
-  if (isUnavailable) {
+  if (board.status === "unavailable" || board.weeks.length === 0) {
     return (
       <>
-        <PageHero
-          eyebrow="Leaderboard"
-          title="This week's top performers"
-          intro="Celebrating learners who show up, do the work and lift others up."
-          pattern="/brand/patterns/Group-462.png"
-        />
-
+        <PageHero {...HERO} />
         <Section id="leaderboard-empty" tone="white">
           <EmptyState
             title="The leaderboard is coming soon"
@@ -53,70 +48,80 @@ export default async function LeaderboardPage({ searchParams }: PageProps) {
     );
   }
 
-  // Selected week defaults to latest available week if not specified or invalid
   const requestedWeek = params?.week ? Number(params.week) : undefined;
-  const selectedWeek =
-    requestedWeek && board.weeks.includes(requestedWeek)
-      ? requestedWeek
-      : board.weeks[board.weeks.length - 1];
-
-  const entries = board.byWeek[selectedWeek] ?? [];
-  const podiumEntries = entries.filter((e) => e.rank <= 3);
-  const tableEntries = entries.filter((e) => e.rank >= 4);
+  const selectedWeek = requestedWeek && board.weeks.includes(requestedWeek) ? requestedWeek : board.weeks[board.weeks.length - 1];
+  const overallRunnersUp = board.overall.filter((e) => e.rank > 3);
+  const lastWeek = board.weeks[board.weeks.length - 1];
 
   return (
     <>
-      <PageHero
-        eyebrow="Leaderboard"
-        title="This week's top performers"
-        intro="Celebrating learners who show up, do the work and lift others up."
-        pattern="/brand/patterns/Group-462.png"
-      />
+      <PageHero {...HERO} />
 
-      <Section id="leaderboard-content" tone="white">
-        {/* Week Selector */}
-        <div className="mb-10 rounded-card border border-line bg-surface p-5 shadow-e1 sm:p-6">
-          <WeekSelect weeks={board.weeks} selectedWeek={selectedWeek} />
-        </div>
-
-        {board.isSample && (
-          <Reveal variant="fade">
-            <div className="mb-8 flex items-start gap-3 rounded-card border border-line bg-sky p-4 text-navy shadow-e1 sm:p-5">
+      {board.isSample && (
+        <div className="bg-surface px-4 pt-8 sm:px-6">
+          <Reveal variant="fade" className="mx-auto max-w-[1200px]">
+            <div className="flex items-start gap-3 rounded-card border border-line bg-sky p-4 text-navy shadow-e1 sm:p-5">
               <Info className="mt-0.5 size-5 shrink-0 text-blue" aria-hidden="true" />
-              <p className="text-sm font-semibold sm:text-base">
-                Preview with sample data: real rankings appear after Week 1.
-              </p>
+              <p className="text-sm font-semibold sm:text-base">Preview with sample data: real rankings appear after Week 1.</p>
             </div>
           </Reveal>
+        </div>
+      )}
+
+      {/* Weekly standings: top 3 of the selected week */}
+      <Section
+        id="weekly-standings"
+        tone="white"
+        eyebrow={`Weekly standings · Top ${WEEKLY_TOP_N}`}
+        title="Weekly top performers"
+        intro="The three learners with the most points each week."
+      >
+        <WeeklyStandings weeks={board.weeks} byWeek={board.byWeek} initialWeek={selectedWeek} />
+      </Section>
+
+      {/* Overall standings: top 5 by total points across all weeks */}
+      <Section
+        id="overall-standings"
+        tone="alt"
+        eyebrow={`Overall standings · Top ${OVERALL_TOP_N}`}
+        title="Overall ranking"
+        intro={`Total points across every week so far (Weeks ${board.weeks[0]}–${lastWeek}).`}
+      >
+        <Podium entries={board.overall} />
+
+        {overallRunnersUp.length > 0 && (
+          <ol aria-label="Overall ranks 4 and 5" className="mt-8 grid gap-4 md:grid-cols-2">
+            {overallRunnersUp.map((entry, idx) => (
+              <Reveal as="li" key={entry.name} variant="up" delay={idx * 100}>
+                <div className="lift flex items-center gap-4 rounded-card border border-line bg-white p-5 shadow-e1">
+                  <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-navy text-lg font-bold text-white">
+                    {entry.rank}
+                    <span className="sr-only">th place</span>
+                  </span>
+                  <p className="min-w-0 flex-1 truncate text-lg font-bold text-navy" title={entry.name}>
+                    {entry.name}
+                  </p>
+                  <p className="text-2xl font-light text-navy">
+                    {entry.points} <span className="text-xs font-bold tracking-wider text-navy/70 uppercase">pts</span>
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </ol>
         )}
 
-        {/* Podium (Ranks 1–3) */}
-        {podiumEntries.length > 0 && (
-          <div className="mb-12">
-            <h2 className="mb-6 text-2xl font-bold text-navy sm:text-3xl">
-              Week {selectedWeek} Top Performers
-            </h2>
-            <Podium entries={podiumEntries} />
+        <Card className="mt-10 bg-white text-sm text-muted">
+          <div className="flex items-start gap-3">
+            <TrendingUp className="mt-0.5 size-5 shrink-0 text-blue" aria-hidden="true" />
+            <div>
+              <h3 className="text-base font-bold text-navy">How it works</h3>
+              <p className="mt-1 leading-relaxed">
+                Points reflect weekly LMS submissions, session attendance and participation. Each week&apos;s top 3 are
+                celebrated in the weekly standings; your points from every week add up to the overall ranking. Equal
+                points share a place.
+              </p>
+            </div>
           </div>
-        )}
-
-        {/* Rank Table (Ranks 4+) */}
-        {tableEntries.length > 0 && (
-          <div className="mb-10">
-            <h3 className="mb-4 text-xl font-bold text-navy">
-              Full Standings (Ranks 4+)
-            </h3>
-            <RankTable entries={tableEntries} weekNumber={selectedWeek} />
-          </div>
-        )}
-
-        {/* How it works card */}
-        <Card className="lift bg-surface-alt text-sm text-muted">
-          <h3 className="text-base font-bold text-navy">How it works</h3>
-          <p className="mt-1 leading-relaxed">
-            Points reflect weekly LMS submissions, session attendance and
-            participation. Rankings refresh automatically.
-          </p>
         </Card>
       </Section>
     </>

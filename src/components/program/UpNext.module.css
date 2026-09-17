@@ -1,0 +1,40 @@
+/* "Up next" live strip: navy glass card with an animated gradient border. */
+
+.card {
+  position: relative;
+  border-radius: var(--radius-card, 12px);
+  padding: 2px;
+  background: linear-gradient(120deg, #0452f0, #5f3dc4, #02b75e, #0452f0);
+  background-size: 300% 300%;
+  animation: gradient-shift 7s ease infinite;
+  box-shadow: var(--shadow-e2);
+}
+
+.cardInner {
+  border-radius: calc(var(--radius-card, 12px) - 2px);
+  background: linear-gradient(160deg, #03134f 0%, #071f70 55%, #03134f 100%);
+  padding: 1.1rem 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .cardInner {
+    padding: 1.25rem 1.75rem;
+  }
+}
+
+@keyframes gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    animation: none !important;
+    background-position: 0% 50% !important;
+  }
+}

@@ -14,7 +14,23 @@ export type Week = {
   highlight?: string;
   icon: WeekIcon;
   isFinal?: boolean;
+  /**
+   * Session links for this week. Paste the URL when it's ready; leave undefined until then
+   * and the site shows "Link coming soon".
+   */
+  sessions?: {
+    /** Tuesday 6:00 PM online walkthrough. */
+    zoomUrl?: string;
+    /** Friday 4:00 PM offline workshop at the ALX Hub (registration is required every week). */
+    registrationUrl?: string;
+  };
 };
+
+/**
+ * Link shared by every week when there's a single recurring Zoom meeting. A week's own
+ * `sessions.zoomUrl` overrides it.
+ */
+export const defaultZoomUrl: string | undefined = undefined;
 
 export const weeks: Week[] = [
   {

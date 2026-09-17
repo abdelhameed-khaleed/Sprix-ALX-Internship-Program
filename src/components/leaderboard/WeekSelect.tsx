@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { cx } from "@/components/ui";
 import styles from "./WeekSelect.module.css";
@@ -8,13 +7,15 @@ import styles from "./WeekSelect.module.css";
 type WeekSelectProps = {
   weeks: number[];
   selectedWeek: number;
+  onSelect: (week: number) => void;
 };
 
 type PillRect = { left: number; top: number; width: number; height: number };
 
-export function WeekSelect({ weeks, selectedWeek }: WeekSelectProps) {
+/** Week tabs with a sliding active pill. Selection is local state, so switching weeks never reloads or scrolls the page. */
+export function WeekSelect({ weeks, selectedWeek, onSelect }: WeekSelectProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const itemRefs = useRef<Map<number, HTMLAnchorElement>>(new Map());
+  const itemRefs = useRef<Map<number, HTMLButtonElement>>(new Map());
   const [pillRect, setPillRect] = useState<PillRect | null>(null);
 
   useEffect(() => {
@@ -39,18 +40,10 @@ export function WeekSelect({ weeks, selectedWeek }: WeekSelectProps) {
 
   return (
     <div>
-      <span
-        id="leaderboard-week-heading"
-        className="block text-xs font-bold tracking-wider text-muted uppercase"
-      >
+      <span id="leaderboard-week-heading" className="block text-xs font-bold tracking-wider text-muted uppercase">
         Select week
       </span>
-      <div
-        ref={containerRef}
-        role="group"
-        aria-labelledby="leaderboard-week-heading"
-        className={cx("mt-2.5 flex flex-wrap gap-2", styles.group)}
-      >
+      <div ref={containerRef} role="group" aria-labelledby="leaderboard-week-heading" className={cx("mt-2.5 flex flex-wrap gap-2", styles.group)}>
         {pillRect && (
           <span
             aria-hidden="true"
@@ -65,23 +58,22 @@ export function WeekSelect({ weeks, selectedWeek }: WeekSelectProps) {
         {weeks.map((week) => {
           const isActive = week === selectedWeek;
           return (
-            <Link
+            <button
               key={week}
-              href={`/leaderboard?week=${week}`}
-              aria-current={isActive ? "true" : undefined}
+              type="button"
+              aria-pressed={isActive}
+              onClick={() => onSelect(week)}
               ref={(el) => {
                 if (el) itemRefs.current.set(week, el);
                 else itemRefs.current.delete(week);
               }}
               className={cx(
-                "relative z-10 inline-flex min-h-11 items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-blue focus-visible:outline-none",
-                isActive
-                  ? "text-white"
-                  : "border border-line bg-surface-alt text-navy hover:border-blue/40 hover:bg-sky",
+                "relative z-10 inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition-colors duration-200",
+                isActive ? "text-white" : "border border-line bg-surface-alt text-navy hover:border-blue/40 hover:bg-sky",
               )}
             >
               Week {week}
-            </Link>
+            </button>
           );
         })}
       </div>

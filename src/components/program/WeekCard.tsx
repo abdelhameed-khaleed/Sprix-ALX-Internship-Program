@@ -12,7 +12,9 @@ import {
 } from "lucide-react";
 import type { Week, WeekIcon } from "@/content/program";
 import { formatWeekDate } from "@/lib/current-week";
+import { getWeekSessions } from "@/lib/sessions";
 import { Badge, IconTile, cx } from "@/components/ui";
+import { SessionRow } from "./SessionRow";
 import styles from "./WeekCard.module.css";
 
 const iconMap: Record<WeekIcon, typeof Brain> = {
@@ -25,12 +27,16 @@ const iconMap: Record<WeekIcon, typeof Brain> = {
   trophy: Trophy,
 };
 
+export type WeekActivationKind = "click" | "hover";
+
 type WeekCardProps = {
   week: Week;
   isExpanded: boolean;
   isCurrent?: boolean;
   isPast?: boolean;
-  onActivate: () => void;
+  /** `now` is threaded down from the page render so session state never mismatches during hydration. */
+  now: Date;
+  onActivate: (kind: WeekActivationKind) => void;
 };
 
 export function WeekCard({
@@ -38,11 +44,13 @@ export function WeekCard({
   isExpanded,
   isCurrent = false,
   isPast = false,
+  now,
   onActivate,
 }: WeekCardProps) {
   const Icon = iconMap[week.icon] ?? Brain;
   const triggerId = `week-trigger-${week.number}`;
   const panelId = `week-panel-${week.number}`;
+  const [onlineSession, offlineSession] = getWeekSessions(week, now);
 
   return (
     <article
@@ -63,8 +71,8 @@ export function WeekCard({
         id={triggerId}
         aria-expanded={isExpanded}
         aria-controls={panelId}
-        onClick={onActivate}
-        onMouseEnter={onActivate}
+        onClick={() => onActivate("click")}
+        onMouseEnter={() => onActivate("hover")}
         className={cx(styles.trigger, "p-5 sm:p-6")}
       >
         <div className="flex flex-col gap-4">
@@ -124,7 +132,16 @@ export function WeekCard({
         </div>
       </button>
 
-      <div id={panelId} role="region" aria-labelledby={triggerId} className={styles.panel} data-expanded={isExpanded}>
+      {/* `inert` keeps the collapsed panel's links out of the tab order and unclickable
+          while still letting the grid-rows/opacity transition run (no display:none). */}
+      <div
+        id={panelId}
+        role="region"
+        aria-labelledby={triggerId}
+        className={styles.panel}
+        data-expanded={isExpanded}
+        inert={!isExpanded}
+      >
         <div className={styles.panelInner}>
           <div className="space-y-4 px-5 pb-5 text-sm sm:px-6 sm:pb-6">
             <div>
@@ -154,6 +171,14 @@ export function WeekCard({
                 <span>{week.highlight}</span>
               </div>
             )}
+
+            <div className="pt-1">
+              <h4 className="text-xs font-bold tracking-wider text-muted uppercase">This week&apos;s sessions</h4>
+              <div className="mt-2 space-y-2">
+                <SessionRow session={onlineSession} />
+                <SessionRow session={offlineSession} />
+              </div>
+            </div>
           </div>
         </div>
       </div>

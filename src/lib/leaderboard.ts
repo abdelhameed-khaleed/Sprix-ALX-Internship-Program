@@ -4,16 +4,28 @@ import { sampleLeaderboardEntries } from "@/content/leaderboard-sample";
 
 // Leaderboard source: a Google Sheet published as CSV (File → Share → Publish to web → CSV)
 // with the header row: week, name, points, badge
+// Weekly standings show the top 3 of each week; overall standings add up every learner's
+// points across all weeks and show the top 5.
 
 export const LEADERBOARD_REVALIDATE_SECONDS = 900;
-const TOP_N = 10;
+export const WEEKLY_TOP_N = 3;
+export const OVERALL_TOP_N = 5;
 const MAX_NAME_LENGTH = 40;
 
 export type LeaderboardEntry = { week: number; name: string; points: number; badge?: string };
+/** One ranked learner, weekly or overall. Ties share a rank. */
+export type Standing = { name: string; points: number; rank: number; badge?: string };
 export type RankedEntry = LeaderboardEntry & { rank: number };
 
 export type Leaderboard =
-  | { status: "ok"; weeks: number[]; byWeek: Record<number, RankedEntry[]>; isSample?: boolean }
+  | {
+      status: "ok";
+      weeks: number[];
+      byWeek: Record<number, RankedEntry[]>;
+      overall: Standing[];
+      /** True when showing built-in sample data because no sheet is configured. */
+      isSample?: boolean;
+    }
   | { status: "unavailable" };
 
 export function parseLeaderboardCsv(csv: string): LeaderboardEntry[] {
@@ -41,21 +53,35 @@ export function parseLeaderboardCsv(csv: string): LeaderboardEntry[] {
   return entries;
 }
 
-/** Dense ranking by points (ties share a rank), top N per week. */
-export function rankWeek(entries: LeaderboardEntry[], topN: number = TOP_N): RankedEntry[] {
-  const sorted = [...entries].sort((a, b) => b.points - a.points || a.name.localeCompare(b.name));
-  const ranked: RankedEntry[] = [];
+/** Dense ranking by points (ties share a rank), keeping ranks 1..topN (ties can add rows). */
+function denseRank<T extends { name: string; points: number }>(items: T[], topN: number): (T & { rank: number })[] {
+  const sorted = [...items].sort((a, b) => b.points - a.points || a.name.localeCompare(b.name));
+  const ranked: (T & { rank: number })[] = [];
   let rank = 0;
   let previous: number | undefined;
-  for (const entry of sorted) {
-    if (entry.points !== previous) {
+  for (const item of sorted) {
+    if (item.points !== previous) {
       rank += 1;
-      previous = entry.points;
+      previous = item.points;
     }
     if (rank > topN) break;
-    ranked.push({ ...entry, rank });
+    ranked.push({ ...item, rank });
   }
   return ranked;
+}
+
+export function rankWeek(entries: LeaderboardEntry[], topN: number = WEEKLY_TOP_N): RankedEntry[] {
+  return denseRank(entries, topN);
+}
+
+/** Sum each learner's points across all weeks, then rank the top N. */
+export function rankOverall(entries: LeaderboardEntry[], topN: number = OVERALL_TOP_N): Standing[] {
+  const totals = new Map<string, number>();
+  for (const e of entries) totals.set(e.name, (totals.get(e.name) ?? 0) + e.points);
+  return denseRank(
+    [...totals].map(([name, points]) => ({ name, points })),
+    topN,
+  );
 }
 
 export function buildLeaderboard(entries: LeaderboardEntry[]): Leaderboard {
@@ -63,10 +89,9 @@ export function buildLeaderboard(entries: LeaderboardEntry[]): Leaderboard {
   const weeks = [...new Set(entries.map((e) => e.week))].sort((a, b) => a - b);
   const byWeek: Record<number, RankedEntry[]> = {};
   for (const week of weeks) byWeek[week] = rankWeek(entries.filter((e) => e.week === week));
-  return { status: "ok", weeks, byWeek };
+  return { status: "ok", weeks, byWeek, overall: rankOverall(entries) };
 }
 
-/** Sample board shown until a real leaderboard CSV is configured (see `LEADERBOARD_CSV_URL`). */
 export function getSampleLeaderboard(): Leaderboard {
   const board = buildLeaderboard(sampleLeaderboardEntries);
   return board.status === "ok" ? { ...board, isSample: true } : board;

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { buildLeaderboard, getLeaderboard, parseLeaderboardCsv, rankWeek } from "@/lib/leaderboard";
+import { buildLeaderboard, getLeaderboard, parseLeaderboardCsv, rankOverall, rankWeek } from "@/lib/leaderboard";
 import { sampleLeaderboardEntries } from "@/content/leaderboard-sample";
 
 describe("parseLeaderboardCsv", () => {
@@ -36,9 +36,30 @@ describe("rankWeek", () => {
     ]);
   });
 
-  it("limits to the top N ranks", () => {
+  it("keeps only the weekly top 3 ranks", () => {
     const entries = Array.from({ length: 15 }, (_, i) => ({ week: 1, name: `L${i}`, points: 100 - i }));
-    expect(rankWeek(entries)).toHaveLength(10);
+    expect(rankWeek(entries).map((e) => e.rank)).toEqual([1, 2, 3]);
+  });
+});
+
+describe("rankOverall", () => {
+  it("sums points across weeks and keeps the top 5", () => {
+    const overall = rankOverall([
+      { week: 1, name: "A", points: 50 },
+      { week: 2, name: "A", points: 50 },
+      { week: 1, name: "B", points: 90 },
+      { week: 1, name: "C", points: 80 },
+      { week: 1, name: "D", points: 70 },
+      { week: 1, name: "E", points: 60 },
+      { week: 1, name: "F", points: 40 },
+    ]);
+    expect(overall.map((e) => [e.name, e.points, e.rank])).toEqual([
+      ["A", 100, 1],
+      ["B", 90, 2],
+      ["C", 80, 3],
+      ["D", 70, 4],
+      ["E", 60, 5],
+    ]);
   });
 });
 

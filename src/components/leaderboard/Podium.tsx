@@ -2,58 +2,69 @@
 
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } from "react";
 import { Award, Medal, Trophy } from "lucide-react";
-import type { RankedEntry } from "@/lib/leaderboard";
+import type { Standing } from "@/lib/leaderboard";
 import { cx } from "@/components/ui";
 import { PointsCounter } from "./PointsCounter";
 import styles from "./fire.module.css";
 
 type PodiumProps = {
-  entries: RankedEntry[];
+  /** Ranked learners; only ranks 1–3 are shown here. */
+  entries: Standing[];
 };
 
 type RankConfig = {
-  rank: number;
+  rank: 1 | 2 | 3;
   label: string;
   Icon: typeof Trophy;
   cardClass: string;
-  orderClass: string;
+  /** Step block under the card: descending height so 1st → 2nd → 3rd reads left to right. */
+  stepClass: string;
+  /** Card size: 1st is the biggest box, then 2nd, then 3rd. */
+  sizeClass: string;
+  nameTextClass: string;
   pointsTextClass: string;
   iconTileClass: string;
-  auraClass?: string;
+  auraClass: string;
 };
 
-const rankConfigs: Record<number, RankConfig> = {
-  1: {
+const rankConfigs: RankConfig[] = [
+  {
     rank: 1,
     label: "1st Place",
     Icon: Trophy,
-    cardClass: "bg-jasmine border-sun/50 shadow-e2 md:shadow-e3 md:-mt-6 md:pb-8",
-    orderClass: "order-1 md:order-2",
-    pointsTextClass: "text-5xl sm:text-6xl",
+    cardClass: "bg-jasmine border-sun/50 shadow-e3",
+    stepClass: "md:h-40 bg-navy",
+    sizeClass: "min-h-80 p-8 md:min-h-[26rem]",
+    nameTextClass: "text-2xl sm:text-3xl",
+    pointsTextClass: "text-6xl sm:text-7xl",
     iconTileClass: "bg-sun/40 text-navy size-12",
     auraClass: styles.fireAura,
   },
-  2: {
+  {
     rank: 2,
     label: "2nd Place",
     Icon: Medal,
-    cardClass: "bg-icy border-line shadow-e1",
-    orderClass: "order-2 md:order-1",
-    pointsTextClass: "text-4xl sm:text-5xl",
+    cardClass: "bg-icy border-line shadow-e2",
+    stepClass: "md:h-28 bg-blue",
+    sizeClass: "min-h-64 p-6 md:min-h-[21rem]",
+    nameTextClass: "text-xl sm:text-2xl",
+    pointsTextClass: "text-5xl sm:text-6xl",
     iconTileClass: "bg-sky text-navy size-11",
     auraClass: styles.icyAura,
   },
-  3: {
+  {
     rank: 3,
     label: "3rd Place",
     Icon: Award,
     cardClass: "bg-lavender border-line shadow-e1",
-    orderClass: "order-3 md:order-3",
+    stepClass: "md:h-16 bg-purple",
+    sizeClass: "min-h-52 p-5 md:min-h-[17rem]",
+    nameTextClass: "text-lg sm:text-xl",
     pointsTextClass: "text-4xl sm:text-5xl",
     iconTileClass: "bg-purple/20 text-navy size-11",
     auraClass: styles.lavenderAura,
   },
-};
+];
 
 /** Fires once the referenced element scrolls into view; stays true afterwards. */
 function useInView<T extends HTMLElement>() {
@@ -79,24 +90,13 @@ function useInView<T extends HTMLElement>() {
   return { ref, inView };
 }
 
-function PodiumTile({
-  config,
-  learners,
-  delayMs,
-  inView,
-}: {
-  config: RankConfig;
-  learners: RankedEntry[];
-  delayMs: number;
-  inView: boolean;
-}) {
+function PodiumTile({ config, learners, delayMs, inView }: { config: RankConfig; learners: Standing[]; delayMs: number; inView: boolean }) {
   const { Icon } = config;
   const isTied = learners.length > 1;
   const [tilt, setTilt] = useState<{ x: number; y: number } | null>(null);
 
   function handlePointerMove(event: PointerEvent<HTMLDivElement>) {
     if (event.pointerType !== "mouse") return;
-    if (typeof window === "undefined") return;
     if (!window.matchMedia("(hover: hover)").matches) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const rect = event.currentTarget.getBoundingClientRect();
@@ -105,124 +105,85 @@ function PodiumTile({
     setTilt({ x: py * -6, y: px * 8 });
   }
 
-  const tiltStyle: CSSProperties = tilt
-    ? { transform: `perspective(700px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)` }
-    : {};
+  const tiltStyle: CSSProperties = tilt ? { transform: `perspective(700px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)` } : {};
 
   return (
-    <div
-      className={cx(styles.riser, config.orderClass)}
-      data-in={inView || undefined}
-      style={{ transitionDelay: `${delayMs}ms` }}
-    >
+    <li className={cx(styles.riser, "flex flex-col")} data-in={inView || undefined} style={{ transitionDelay: `${delayMs}ms` }}>
       <div
-        className={cx(
-          "flex flex-col justify-between rounded-card border p-6 text-navy",
-          config.cardClass,
-          styles.tile,
-          config.rank === 1 && styles.tileFirst,
-        )}
+        className={cx("relative flex flex-col rounded-card border text-navy", config.sizeClass, config.cardClass, styles.tile, config.rank === 1 && styles.tileFirst)}
         style={tiltStyle}
         onPointerMove={handlePointerMove}
         onPointerLeave={() => setTilt(null)}
       >
-        {config.auraClass && (
-          <span aria-hidden="true" className={cx(styles.aura, config.auraClass)} />
-        )}
+        <span aria-hidden="true" className={cx(styles.aura, config.auraClass)} />
         {config.rank === 1 && (
-          <span aria-hidden="true" className={styles.embers}>
-            {Array.from({ length: 6 }).map((_, i) => (
-              <span
-                key={i}
-                className={styles.ember}
-                style={{ animationDelay: `${i * 0.35}s`, left: `${10 + i * 14}%` }}
-              />
-            ))}
-          </span>
+          <>
+            <span aria-hidden="true" className={styles.embers}>
+              {Array.from({ length: 6 }).map((_, i) => (
+                <span key={i} className={styles.ember} style={{ animationDelay: `${i * 0.35}s`, left: `${10 + i * 14}%` }} />
+              ))}
+            </span>
+            <span aria-hidden="true" className={styles.sweep} />
+          </>
         )}
-        {config.rank === 1 && <span aria-hidden="true" className={styles.sweep} />}
 
-        {/* Top row: Rank badge + Icon */}
         <div className="relative z-10 flex items-center justify-between gap-3">
-          <span className="inline-flex items-center rounded-full bg-navy px-3 py-1 text-xs font-bold text-white uppercase tracking-wider">
+          <span className="inline-flex items-center rounded-full bg-navy px-3 py-1 text-xs font-bold tracking-wider text-white uppercase">
             {config.label}
-            {isTied && " (Tie)"}
+            {isTied && " (tie)"}
           </span>
-          <div
-            className={cx(
-              "flex items-center justify-center rounded-full",
-              config.iconTileClass,
-              config.rank === 1 && styles.iconBounce,
-            )}
-            aria-hidden="true"
-          >
+          <div className={cx("flex items-center justify-center rounded-full", config.iconTileClass, config.rank === 1 && styles.iconBounce)} aria-hidden="true">
             <Icon className="size-6 text-navy" />
           </div>
         </div>
 
-        {/* Learners list for this rank */}
         <div className="relative z-10 mt-6 divide-y divide-navy/15">
-          {learners.map((learner, idx) => (
-            <div key={idx} className={idx > 0 ? "pt-4" : ""}>
-              <h3
-                className="truncate text-xl font-bold text-navy sm:text-2xl"
-                title={learner.name}
-              >
+          {learners.map((learner) => (
+            <div key={learner.name} className="py-2 first:pt-0 last:pb-0">
+              <h3 className={cx("truncate font-bold text-navy", config.nameTextClass)} title={learner.name}>
                 {learner.name}
               </h3>
-
               <div className="mt-2 flex items-baseline gap-1.5">
-                <PointsCounter
-                  value={learner.points}
-                  play={inView}
-                  className={cx("font-light text-navy tracking-tight", config.pointsTextClass)}
-                />
-                <span className="text-xs font-bold uppercase tracking-wider text-navy/70">
-                  pts
-                </span>
+                <PointsCounter value={learner.points} play={inView} className={cx("font-light tracking-tight text-navy", config.pointsTextClass)} />
+                <span className="text-xs font-bold tracking-wider text-navy/70 uppercase">pts</span>
               </div>
-
               {learner.badge && (
-                <div className="mt-2">
-                  <span className="inline-flex rounded-full bg-navy/10 px-3 py-1 text-xs font-semibold text-navy">
-                    {learner.badge}
-                  </span>
-                </div>
+                <span className="mt-2 inline-flex rounded-full bg-navy/10 px-3 py-1 text-xs font-semibold text-navy">{learner.badge}</span>
               )}
             </div>
           ))}
         </div>
       </div>
-    </div>
+
+      {/* Podium step with the place number: tallest for 1st, descending to the right (md+ only). */}
+      <div
+        aria-hidden="true"
+        className={cx("mt-3 hidden items-start justify-center rounded-t-card pt-3 text-4xl font-bold text-white md:flex", config.stepClass)}
+      >
+        {config.rank}
+      </div>
+    </li>
   );
 }
 
+/**
+ * Top-3 podium shown strictly in rank order: 1st, 2nd, 3rd from left to right (top to bottom
+ * on mobile), with step heights descending so the order is obvious at a glance.
+ */
 export function Podium({ entries }: PodiumProps) {
-  const { ref, inView } = useInView<HTMLDivElement>();
+  const { ref, inView } = useInView<HTMLOListElement>();
 
-  const rank1 = entries.filter((e) => e.rank === 1);
-  const rank2 = entries.filter((e) => e.rank === 2);
-  const rank3 = entries.filter((e) => e.rank === 3);
+  const places = rankConfigs
+    .map((config) => ({ config, learners: entries.filter((e) => e.rank === config.rank) }))
+    .filter((place) => place.learners.length > 0);
 
-  const ranksToRender = [
-    { config: rankConfigs[1], learners: rank1 },
-    { config: rankConfigs[2], learners: rank2 },
-    { config: rankConfigs[3], learners: rank3 },
-  ].filter((item) => item.learners.length > 0);
-
-  if (ranksToRender.length === 0) return null;
+  if (places.length === 0) return null;
 
   return (
-    <div ref={ref} className="grid grid-cols-1 items-end gap-6 md:grid-cols-3">
-      {ranksToRender.map(({ config, learners }, idx) => (
-        <PodiumTile
-          key={config.rank}
-          config={config}
-          learners={learners}
-          delayMs={idx * 130}
-          inView={inView}
-        />
+    <ol ref={ref} aria-label="Top 3, in order" className="grid grid-cols-1 items-end gap-6 md:grid-cols-[1.3fr_1fr_0.8fr]">
+      {places.map(({ config, learners }, idx) => (
+        <PodiumTile key={config.rank} config={config} learners={learners} delayMs={idx * 130} inView={inView} />
       ))}
-    </div>
+    </ol>
   );
 }

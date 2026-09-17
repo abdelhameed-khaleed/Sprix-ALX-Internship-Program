@@ -29,10 +29,9 @@ export default async function HomePage() {
   let isSample = false;
   if (leaderboard.status === "ok" && leaderboard.weeks.length > 0) {
     const latestWeek = leaderboard.weeks[leaderboard.weeks.length - 1];
-    topPerformers = (leaderboard.byWeek[latestWeek] ?? []).slice(0, 3);
-    // `isSample` is only present once the leaderboard source can flag sample/demo data;
-    // read it defensively so this page keeps compiling either way.
-    isSample = Boolean((leaderboard as unknown as { isSample?: boolean }).isSample);
+    // Already limited to the weekly top 3 places (ties can add a learner).
+    topPerformers = leaderboard.byWeek[latestWeek] ?? [];
+    isSample = Boolean(leaderboard.isSample);
   }
 
   return (

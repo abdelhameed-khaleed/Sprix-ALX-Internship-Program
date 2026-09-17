@@ -1,19 +1,14 @@
 import type { Metadata } from "next";
-import {
-  ArrowRight,
-  Building2,
-  Calendar,
-  Clock,
-  Sparkles,
-  Trophy,
-  Video,
-} from "lucide-react";
-import { PageHero, Section, Card, IconTile } from "@/components/ui";
+import { Building2, Clock, Video } from "lucide-react";
+import { PageHero, Section, Card, IconTile, cx } from "@/components/ui";
 import { CompletionRequirements } from "@/components/sections/CompletionRequirements";
 import { site, weeklyCadence } from "@/content/site";
 import { weeks } from "@/content/program";
-import { getProgramStatus, formatWeekDate } from "@/lib/current-week";
+import { getProgramStatus } from "@/lib/current-week";
+import { getCairoWeekdayIndex, getWeekProgress } from "@/lib/sessions";
 import { WeekTimeline } from "@/components/program/WeekTimeline";
+import { UpNext } from "@/components/program/UpNext";
+import { ProgramProgress } from "@/components/program/ProgramProgress";
 import { Reveal } from "@/components/motion/Reveal";
 
 export const revalidate = 3600;
@@ -30,11 +25,37 @@ const cadenceIconMap = {
   alarm: Clock,
 };
 
+/** Sun=0 .. Sat=6 weekday index for each cadence item's day name. */
+const CADENCE_DAY_INDEX: Record<string, number> = {
+  Sunday: 0,
+  Monday: 1,
+  Tuesday: 2,
+  Wednesday: 3,
+  Thursday: 4,
+  Friday: 5,
+  Saturday: 6,
+};
+
 export default function ProgramPage() {
-  const status = getProgramStatus();
+  const now = new Date();
+  const status = getProgramStatus(now);
   const intro = site.description.split(". ")[0] + ".";
 
   const currentWeekNumber = status.status === "active" ? status.week.number : undefined;
+
+  const progressLabel =
+    status.status === "completed"
+      ? `Week ${site.totalWeeks} of ${site.totalWeeks} · Complete`
+      : status.status === "active"
+        ? `Week ${status.week.number} of ${site.totalWeeks}`
+        : `${site.totalWeeks}-week program`;
+
+  // Weekly rhythm: highlight whichever cadence item (Tue walkthrough / Fri workshop / Sun
+  // deadline) is soonest from today, wrapping forward through the Sun→Sat week.
+  const todayIndex = getCairoWeekdayIndex(now);
+  const cadenceDistance = (day: string) => (((CADENCE_DAY_INDEX[day] ?? 0) - todayIndex + 7) % 7);
+  const nearestDistance = Math.min(...weeklyCadence.map((c) => cadenceDistance(c.day)));
+  const weekProgress = getWeekProgress(now);
 
   return (
     <>
@@ -45,49 +66,19 @@ export default function ProgramPage() {
         pattern="/brand/patterns/Group-457.png"
       />
 
-      {/* Cohort Status Banner */}
+      {/* Up next: live status + program progress */}
       <div className="bg-surface px-4 pt-8 sm:px-6">
-        <div className="mx-auto max-w-[1200px]">
-          {status.status === "upcoming" && (
-            <Reveal variant="fade">
-              <div className="flex items-center gap-3 rounded-card border border-line bg-sky p-4 text-navy shadow-e1 sm:p-5">
-                <Calendar className="size-5 shrink-0 text-blue" aria-hidden="true" />
-                <p className="text-base font-semibold">
-                  Program starts {formatWeekDate(status.startsOn)}
-                </p>
-              </div>
-            </Reveal>
-          )}
-
-          {status.status === "active" && (
-            <Reveal variant="fade">
-              <div className="flex flex-col items-start justify-between gap-3 rounded-card border border-line bg-sky p-4 text-navy shadow-e1 sm:flex-row sm:items-center sm:p-5">
-                <div className="flex items-center gap-3">
-                  <Sparkles className="size-5 shrink-0 text-blue" aria-hidden="true" />
-                  <p className="text-base font-semibold">
-                    You&apos;re in Week {status.week.number}: {status.week.label}
-                  </p>
-                </div>
-                <a
-                  href={`#week-${status.week.number}`}
-                  className="inline-flex min-h-11 items-center gap-1.5 text-sm font-bold text-blue hover:text-blue-dark hover:underline"
-                >
-                  Jump to this week <ArrowRight className="size-4" aria-hidden="true" />
-                </a>
-              </div>
-            </Reveal>
-          )}
-
-          {status.status === "completed" && (
-            <Reveal variant="fade">
-              <div className="flex items-center gap-3 rounded-card border border-line bg-sky p-4 text-navy shadow-e1 sm:p-5">
-                <Trophy className="size-5 shrink-0 text-sun" aria-hidden="true" />
-                <p className="text-base font-semibold">
-                  Program completed. Congratulations, graduates!
-                </p>
-              </div>
-            </Reveal>
-          )}
+        <div className="mx-auto max-w-[1200px] space-y-6">
+          <Reveal variant="fade">
+            <UpNext initialNow={now.toISOString()} />
+          </Reveal>
+          <Reveal variant="fade" delay={80}>
+            <ProgramProgress
+              currentWeek={currentWeekNumber ?? 0}
+              completed={status.status === "completed"}
+              label={progressLabel}
+            />
+          </Reveal>
         </div>
       </div>
 
@@ -96,15 +87,24 @@ export default function ProgramPage() {
         id="cadence"
         eyebrow="Weekly rhythm"
         title="Fixed weekly rhythm"
-        intro="Repeated every week of the program so you can plan your time with confidence."
+        intro="Repeated every week of the program so you can plan your time with confidence. The item closest to right now is highlighted."
       >
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {weeklyCadence.map((cadence, idx) => {
             const CadenceIcon = cadenceIconMap[cadence.icon] ?? Clock;
+            const distance = cadenceDistance(cadence.day);
+            const isToday = distance === 0;
+            const isHighlighted = distance === nearestDistance;
+
             return (
               <Reveal key={idx} delay={idx * 80}>
-                <Card className="lift flex items-start gap-4">
-                  <IconTile tone="blue">
+                <Card
+                  className={cx(
+                    "lift flex items-start gap-4 transition-shadow duration-300",
+                    isHighlighted && "border-blue! shadow-e3 ring-2 ring-blue/30",
+                  )}
+                >
+                  <IconTile tone={isHighlighted ? "green" : "blue"}>
                     <CadenceIcon className="size-6 text-navy" aria-hidden="true" />
                   </IconTile>
                   <div className="min-w-0 flex-1">
@@ -112,9 +112,14 @@ export default function ProgramPage() {
                       <p className="text-xs font-bold tracking-wider text-muted uppercase">
                         {cadence.day}
                       </p>
-                      <span className="rounded bg-surface-alt px-2 py-0.5 text-xs font-semibold text-navy">
-                        {cadence.where}
-                      </span>
+                      <div className="flex items-center gap-1.5">
+                        {isToday && (
+                          <span className="rounded-full bg-lime px-2 py-0.5 text-xs font-bold text-navy">Today</span>
+                        )}
+                        <span className="rounded bg-surface-alt px-2 py-0.5 text-xs font-semibold text-navy">
+                          {cadence.where}
+                        </span>
+                      </div>
                     </div>
                     <h3 className="mt-1 text-lg font-bold text-navy">{cadence.title}</h3>
                     <p className="mt-1 text-sm font-medium text-ink">{cadence.time}</p>
@@ -124,6 +129,22 @@ export default function ProgramPage() {
             );
           })}
         </div>
+
+        <Reveal variant="fade" delay={260}>
+          <div className="mt-6">
+            <div className="flex items-center justify-between text-xs font-semibold text-muted">
+              <span>Sun</span>
+              <span>This week</span>
+              <span>Sat</span>
+            </div>
+            <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-line">
+              <div
+                className="h-full rounded-full bg-blue transition-[width] duration-700"
+                style={{ width: `${Math.round(weekProgress * 100)}%` }}
+              />
+            </div>
+          </div>
+        </Reveal>
       </Section>
 
       {/* Interactive Week Breakdown */}
@@ -132,9 +153,9 @@ export default function ProgramPage() {
         tone="alt"
         eyebrow="Curriculum"
         title="Your 7-week journey"
-        intro="Hover or select any week to pop its details forward: learning outcome, expert session topic and deliverable. Only one week is open at a time, and this week starts expanded."
+        intro="Hover or select any week to pop its details forward: learning outcome, expert session topic, deliverable and this week's session links. Only one week is open at a time, and this week starts expanded."
       >
-        <WeekTimeline weeks={weeks} currentWeekNumber={currentWeekNumber} />
+        <WeekTimeline weeks={weeks} currentWeekNumber={currentWeekNumber} nowIso={now.toISOString()} />
       </Section>
 
       <CompletionRequirements variant="page" />

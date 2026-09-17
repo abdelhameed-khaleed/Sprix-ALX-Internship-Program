@@ -1,0 +1,83 @@
+/* Decorative wavy rail + travelling rocket beside the week list. aria-hidden in markup;
+   pointer-events disabled throughout so it never intercepts clicks. */
+
+.rail {
+  position: relative;
+  flex: 0 0 auto;
+  width: 40px;
+}
+
+@media (max-width: 767px) {
+  .rail {
+    width: 26px;
+  }
+}
+
+.svg {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.trailFaint {
+  fill: none;
+  stroke: var(--color-line);
+  stroke-width: 2;
+  stroke-dasharray: 3 7;
+  stroke-linecap: round;
+  opacity: 0.9;
+}
+
+.trailProgress {
+  fill: none;
+  stroke: url(#program-rocket-gradient);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 4px rgb(4 82 240 / 0.35));
+  transition: none;
+}
+
+.nodeUpcoming {
+  fill: var(--color-surface);
+  stroke: var(--color-line);
+  stroke-width: 1.5;
+}
+
+.nodeDone {
+  fill: var(--color-blue);
+  stroke: var(--color-icy);
+  stroke-width: 1.5;
+}
+
+.rocket {
+  transform-box: fill-box;
+}
+
+.flame {
+  animation: flame-flicker 420ms ease-in-out infinite;
+  transform-origin: center top;
+}
+
+.traveling .flame {
+  animation-duration: 140ms;
+}
+
+@keyframes flame-flicker {
+  0%,
+  100% {
+    transform: scaleY(1) scaleX(1);
+    opacity: 0.95;
+  }
+  50% {
+    transform: scaleY(1.25) scaleX(0.85);
+    opacity: 0.7;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flame,
+  .traveling .flame {
+    animation: none !important;
+  }
+}
