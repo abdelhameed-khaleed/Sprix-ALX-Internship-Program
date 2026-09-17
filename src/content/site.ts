@@ -18,10 +18,10 @@ export const site = {
   links: {
     alx: "https://www.alxafrica.com/",
   },
-  /** Optional hero background video. Owner will supply /public/media/hero.mp4 later. */
+  /** Hero background video: silent 20s loop cut from the ALX Hackathon recap (0:10–0:30). Set to undefined for the animated fallback. */
   hero: {
-    video: undefined as string | undefined,
-    poster: undefined as string | undefined,
+    video: "/media/hero.mp4" as string | undefined,
+    poster: "/media/hero-poster.webp" as string | undefined,
   },
 } as const;
 

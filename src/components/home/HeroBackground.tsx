@@ -63,7 +63,9 @@ export function HeroBackground({ video, poster }: HeroBackgroundProps) {
         {video ? (
           <video
             ref={videoRef}
-            className="h-full w-full object-cover opacity-70"
+            src={video}
+            // Light blur + slight zoom (hides blurred edges) so text burned into the footage doesn't compete with the headline.
+            className="h-full w-full scale-105 object-cover opacity-70 blur-[2px]"
             autoPlay
             muted
             loop
