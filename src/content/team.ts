@@ -25,6 +25,7 @@ export const team: TeamMember[] = [
       "Your mastery project and Pitching Day",
     ],
     isMainContact: true,
+    photo: "/team/abdelhameed.jpg",
     whatsapp: "https://wa.me/201554057372",
   },
 ];
