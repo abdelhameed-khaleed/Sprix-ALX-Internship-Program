@@ -1,5 +1,6 @@
 import type { RankedEntry } from "@/lib/leaderboard";
 import { Badge } from "@/components/ui";
+import { Reveal } from "@/components/motion/Reveal";
 
 type RankTableProps = {
   entries: RankedEntry[];
@@ -33,9 +34,12 @@ export function RankTable({ entries, weekNumber }: RankTableProps) {
         </thead>
         <tbody className="divide-y divide-line">
           {entries.map((entry, idx) => (
-            <tr
+            <Reveal
               key={`${entry.rank}-${entry.name}-${idx}`}
-              className="transition-colors hover:bg-sky/30 even:bg-surface-alt"
+              as="tr"
+              variant="fade"
+              delay={idx * 45}
+              className="transition-colors duration-200 hover:bg-sky/30 even:bg-surface-alt"
             >
               <td className="px-5 py-4 font-semibold text-navy">
                 #{entry.rank}
@@ -56,7 +60,7 @@ export function RankTable({ entries, weekNumber }: RankTableProps) {
                   <span className="text-muted">—</span>
                 )}
               </td>
-            </tr>
+            </Reveal>
           ))}
         </tbody>
       </table>

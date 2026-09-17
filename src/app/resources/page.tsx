@@ -1,91 +1,105 @@
 import type { Metadata } from "next";
-import { ButtonLink, EmptyState, PageHero, Section } from "@/components/ui";
-import { resources, type ResourceType } from "@/content/resources";
+import { FolderOpen, Landmark, Presentation, Video } from "lucide-react";
+import { EmptyState, IconTile, PageHero, Section } from "@/components/ui";
+import { resources, resourceCategories, type ResourceCategory } from "@/content/resources";
 import { ResourceCard } from "@/components/resources/ResourceCard";
 import { ResourceFilters } from "@/components/resources/ResourceFilters";
+import { Reveal } from "@/components/motion/Reveal";
 
 export const metadata: Metadata = {
   title: "Resources",
   description:
-    "Access learning platforms, links, documents, videos, and templates for the ALX × SPRIX Professional Skills Program.",
+    "Access walkthrough recordings, slides, Friday session materials and other resources for the ALX × SPRIX Professional Skills Program.",
+};
+
+const categoryIconMap: Record<ResourceCategory, typeof Video> = {
+  "walkthrough-recording": Video,
+  slides: Presentation,
+  "friday-session": Landmark,
+  other: FolderOpen,
 };
 
 type PageProps = {
   searchParams: Promise<{
+    category?: string;
     week?: string;
-    type?: string;
   }>;
 };
+
+function matchesWeek(week: number | "general", activeWeek: string): boolean {
+  if (activeWeek === "general") return week === "general";
+  if (activeWeek === "all") return true;
+  return week === Number(activeWeek) || week === "general";
+}
 
 export default async function ResourcesPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const activeWeek = typeof params?.week === "string" ? params.week : "all";
-  const activeType = typeof params?.type === "string" ? params.type : "all";
+  const requestedCategory = typeof params?.category === "string" ? params.category : "all";
+  const activeCategory =
+    requestedCategory === "all" || resourceCategories.some((c) => c.key === requestedCategory)
+      ? requestedCategory
+      : "all";
 
-  // Only show type chips for types that exist in the data
-  const availableTypes = Array.from(new Set(resources.map((r) => r.type))) as ResourceType[];
-
-  const filteredResources = resources.filter((item) => {
-    // Week matching: "Week N" shows that week's items plus "general" items
-    let matchesWeek = true;
-    if (activeWeek === "general") {
-      matchesWeek = item.week === "general";
-    } else if (activeWeek !== "all") {
-      const weekNum = Number(activeWeek);
-      matchesWeek = item.week === weekNum || item.week === "general";
-    }
-
-    // Type matching
-    let matchesType = true;
-    if (activeType !== "all") {
-      matchesType = item.type === activeType;
-    }
-
-    return matchesWeek && matchesType;
-  });
+  const categoriesToRender =
+    activeCategory === "all"
+      ? resourceCategories
+      : resourceCategories.filter((c) => c.key === activeCategory);
 
   return (
     <>
       <PageHero
         eyebrow="Resources"
         title="Everything you need, in one place"
-        intro="Access learning tools, templates, session materials, and official program links."
+        intro="Walkthrough recordings, slides, Friday session materials and official program links — organised by category and week."
         pattern="/brand/patterns/Group-460.png"
       />
 
       <Section id="resources-content" tone="white">
         {/* Filters */}
         <div className="mb-10 rounded-card border border-line bg-surface p-5 shadow-e1 sm:p-6">
-          <ResourceFilters
-            activeWeek={activeWeek}
-            activeType={activeType}
-            availableTypes={availableTypes}
-          />
+          <ResourceFilters activeWeek={activeWeek} activeCategory={activeCategory} />
         </div>
 
-        {/* Resources Grid or Empty State */}
-        {filteredResources.length > 0 ? (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredResources.map((resource) => (
-              <ResourceCard key={resource.id} resource={resource} />
-            ))}
-          </div>
-        ) : (
-          <EmptyState
-            title="No resources here yet"
-            action={
-              <ButtonLink href="/resources" variant="primary">
-                Show all resources
-              </ButtonLink>
-            }
-          >
-            We couldn&apos;t find any resources matching your selected filters. Try
-            choosing a different week or type, or reset the filters.
-          </EmptyState>
-        )}
+        <div className="space-y-14">
+          {categoriesToRender.map((cat, catIdx) => {
+            const Icon = categoryIconMap[cat.key] ?? FolderOpen;
+            const items = resources.filter(
+              (item) => item.category === cat.key && matchesWeek(item.week, activeWeek),
+            );
+
+            return (
+              <Reveal key={cat.key} delay={catIdx * 60} as="div">
+                <div id={`category-${cat.key}`} className="scroll-mt-24">
+                  <div className="mb-6 flex items-start gap-4">
+                    <IconTile tone="blue">
+                      <Icon className="size-6 text-navy" aria-hidden="true" />
+                    </IconTile>
+                    <div>
+                      <h2 className="text-xl font-bold text-navy sm:text-2xl">{cat.label}</h2>
+                      <p className="mt-1 text-sm text-muted">{cat.description}</p>
+                    </div>
+                  </div>
+
+                  {items.length > 0 ? (
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                      {items.map((resource, idx) => (
+                        <Reveal key={resource.id} delay={idx * 70} as="div">
+                          <ResourceCard resource={resource} />
+                        </Reveal>
+                      ))}
+                    </div>
+                  ) : (
+                    <EmptyState title="Nothing here yet">{cat.emptyMessage}</EmptyState>
+                  )}
+                </div>
+              </Reveal>
+            );
+          })}
+        </div>
 
         {/* Muted note under the grid */}
-        <p className="mt-12 text-center text-sm text-muted">
+        <p className="mt-14 text-center text-sm text-muted">
           New resources are added as the program progresses.
         </p>
       </Section>

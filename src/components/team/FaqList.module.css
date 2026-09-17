@@ -1,0 +1,22 @@
+.panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows var(--dur-slow) var(--ease-out-expo),
+    opacity var(--dur-base) var(--ease-out-expo);
+}
+.panel[data-expanded="true"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.panelInner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    transition: none !important;
+  }
+}

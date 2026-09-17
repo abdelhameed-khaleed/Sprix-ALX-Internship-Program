@@ -1,0 +1,181 @@
+/* Podium reveal + rank-1 "on fire" effects. Colours are the ALX brand hexes only. */
+
+.riser {
+  transform: scaleY(0.6) translateY(24px);
+  transform-origin: bottom;
+  opacity: 0;
+  transition:
+    transform var(--dur-slow) var(--ease-spring),
+    opacity var(--dur-base) var(--ease-out-expo);
+}
+.riser[data-in] {
+  transform: none;
+  opacity: 1;
+}
+
+.tile {
+  position: relative;
+  height: 100%;
+  isolation: isolate;
+  transition:
+    transform 150ms ease-out,
+    box-shadow 200ms ease-out;
+  will-change: transform;
+}
+
+.tileFirst {
+  overflow: hidden;
+}
+
+@media (hover: hover) {
+  .tile:hover {
+    box-shadow: var(--shadow-e3);
+  }
+}
+
+/* Aura glow behind the card content */
+.aura {
+  position: absolute;
+  inset: -14%;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  filter: blur(6px);
+}
+
+.fireAura {
+  background:
+    radial-gradient(45% 55% at 50% 100%, rgb(234 179 8 / 0.55), transparent 70%),
+    radial-gradient(30% 42% at 30% 92%, rgb(253 231 145 / 0.55), transparent 75%),
+    radial-gradient(30% 42% at 72% 92%, rgb(253 231 145 / 0.4), transparent 75%);
+  animation: flicker 2.2s ease-in-out infinite;
+}
+
+.icyAura {
+  background: radial-gradient(50% 60% at 50% 100%, rgb(197 229 255 / 0.55), transparent 75%);
+  animation: glowPulse 3.6s ease-in-out infinite;
+}
+
+.lavenderAura {
+  background: radial-gradient(50% 60% at 50% 100%, rgb(233 219 255 / 0.6), transparent 75%);
+  animation: glowPulse 3.6s ease-in-out infinite;
+  animation-delay: 0.6s;
+}
+
+/* Rising embers (rank 1 only) */
+.embers {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ember {
+  position: absolute;
+  bottom: 6%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fde791, #eab308 65%, transparent 75%);
+  opacity: 0;
+  animation: rise 2.8s ease-in infinite;
+}
+
+/* Metallic shimmer sweep (rank 1 only) */
+.sweep {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 32%, rgb(255 255 255 / 0.55) 48%, transparent 64%);
+  transform: translateX(-130%);
+  animation: sweep 5.5s ease-in-out infinite;
+}
+
+.iconBounce {
+  animation: iconBounce 2.4s ease-in-out infinite;
+}
+
+@keyframes flicker {
+  0%,
+  100% {
+    opacity: 0.85;
+    transform: scale(1);
+  }
+  35% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  60% {
+    opacity: 0.75;
+    transform: scale(0.98);
+  }
+}
+
+@keyframes glowPulse {
+  0%,
+  100% {
+    opacity: 0.65;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes rise {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(-120px) translateX(6px);
+    opacity: 0;
+  }
+}
+
+@keyframes sweep {
+  0%,
+  70% {
+    transform: translateX(-130%);
+  }
+  85% {
+    transform: translateX(130%);
+  }
+  100% {
+    transform: translateX(130%);
+  }
+}
+
+@keyframes iconBounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .riser {
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  .tile {
+    transition: none !important;
+    transform: none !important;
+  }
+  .fireAura,
+  .icyAura,
+  .lavenderAura,
+  .ember,
+  .sweep,
+  .iconBounce {
+    animation: none !important;
+  }
+}

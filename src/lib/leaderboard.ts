@@ -1,5 +1,6 @@
 import Papa from "papaparse";
 import { site } from "@/content/site";
+import { sampleLeaderboardEntries } from "@/content/leaderboard-sample";
 
 // Leaderboard source: a Google Sheet published as CSV (File → Share → Publish to web → CSV)
 // with the header row: week, name, points, badge
@@ -12,7 +13,7 @@ export type LeaderboardEntry = { week: number; name: string; points: number; bad
 export type RankedEntry = LeaderboardEntry & { rank: number };
 
 export type Leaderboard =
-  | { status: "ok"; weeks: number[]; byWeek: Record<number, RankedEntry[]> }
+  | { status: "ok"; weeks: number[]; byWeek: Record<number, RankedEntry[]>; isSample?: boolean }
   | { status: "unavailable" };
 
 export function parseLeaderboardCsv(csv: string): LeaderboardEntry[] {
@@ -65,9 +66,15 @@ export function buildLeaderboard(entries: LeaderboardEntry[]): Leaderboard {
   return { status: "ok", weeks, byWeek };
 }
 
+/** Sample board shown until a real leaderboard CSV is configured (see `LEADERBOARD_CSV_URL`). */
+export function getSampleLeaderboard(): Leaderboard {
+  const board = buildLeaderboard(sampleLeaderboardEntries);
+  return board.status === "ok" ? { ...board, isSample: true } : board;
+}
+
 export async function getLeaderboard(): Promise<Leaderboard> {
   const url = process.env.LEADERBOARD_CSV_URL;
-  if (!url) return { status: "unavailable" };
+  if (!url) return getSampleLeaderboard();
   try {
     const res = await fetch(url, { next: { revalidate: LEADERBOARD_REVALIDATE_SECONDS } });
     if (!res.ok) return { status: "unavailable" };

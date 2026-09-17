@@ -26,23 +26,29 @@ export function MemberCard({ member, isSingle = false }: MemberCardProps) {
         )}
       >
         {/* Avatar / Photo */}
-        <div className="shrink-0">
+        <div className="group/avatar relative shrink-0 overflow-visible">
           {member.photo ? (
-            <Image
-              src={member.photo}
-              alt={member.name}
-              width={112}
-              height={112}
-              className="size-24 rounded-full object-cover shadow-e1 sm:size-28"
-            />
+            <div className="size-24 overflow-hidden rounded-full shadow-e1 sm:size-28">
+              <Image
+                src={member.photo}
+                alt={member.name}
+                width={112}
+                height={112}
+                className="size-full object-cover transition-transform duration-300 ease-out group-hover/avatar:scale-110"
+              />
+            </div>
           ) : (
             <div
               aria-hidden="true"
-              className="flex size-24 items-center justify-center rounded-full bg-blue text-2xl font-bold text-white shadow-e1 sm:size-28 sm:text-3xl"
+              className="flex size-24 items-center justify-center rounded-full bg-blue text-2xl font-bold text-white shadow-e1 transition-transform duration-300 ease-out group-hover/avatar:scale-110 sm:size-28 sm:text-3xl"
             >
               {initials}
             </div>
           )}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 rounded-full ring-0 ring-icy/0 transition-all duration-300 ease-out group-hover/avatar:ring-4 group-hover/avatar:ring-icy/70"
+          />
         </div>
 
         {/* Member Details */}
@@ -90,9 +96,12 @@ export function MemberCard({ member, isSingle = false }: MemberCardProps) {
                 href={member.whatsapp}
                 external
                 variant="primary"
-                className="w-full sm:w-auto"
+                className="group/whatsapp w-full sm:w-auto"
               >
-                <MessageCircle className="size-5" aria-hidden="true" />
+                <MessageCircle
+                  className="size-5 transition-transform duration-200 ease-out group-hover/whatsapp:scale-110 group-hover/whatsapp:-rotate-6"
+                  aria-hidden="true"
+                />
                 Message on WhatsApp
               </ButtonLink>
             )}

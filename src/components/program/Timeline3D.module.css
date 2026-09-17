@@ -1,0 +1,169 @@
+/* Decorative 3D background layer behind the week cards. aria-hidden in markup. */
+
+.scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: var(--radius-card, 12px);
+  perspective: 1200px;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgb(4 82 240 / 0.16), transparent 60%),
+    linear-gradient(180deg, #03134f 0%, #051b63 55%, #03134f 100%);
+  pointer-events: none;
+}
+
+.stage {
+  position: absolute;
+  inset: -12% -25%;
+  transform-style: preserve-3d;
+  transform-origin: 50% 100%;
+  transform: rotateX(58deg) translateZ(-40px) translateY(calc(var(--depth, 0) * -26px));
+  transition: transform var(--dur-slow) var(--ease-out-expo);
+}
+
+.floor {
+  position: absolute;
+  inset: -40% -60%;
+  background-image:
+    repeating-linear-gradient(0deg, rgb(197 229 255 / 0.16) 0 1px, transparent 1px 64px),
+    repeating-linear-gradient(90deg, rgb(197 229 255 / 0.16) 0 1px, transparent 1px 64px);
+  animation: driftFloor 22s linear infinite;
+  opacity: 0.45;
+}
+
+.track {
+  position: absolute;
+  left: 50%;
+  top: 2%;
+  bottom: 2%;
+  width: 3px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, rgb(197 229 255 / 0.9), rgb(4 82 240 / 0.5) 55%, rgb(95 61 196 / 0.6));
+  box-shadow: 0 0 24px rgb(4 82 240 / 0.6);
+}
+
+.node {
+  position: absolute;
+  left: 50%;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ebf6ff, #0452f0 70%);
+  box-shadow: 0 0 14px rgb(4 82 240 / 0.7);
+  transition:
+    transform var(--dur-slow) var(--ease-spring),
+    background var(--dur-base) var(--ease-out-expo),
+    box-shadow var(--dur-base) var(--ease-out-expo);
+}
+
+.nodeActive {
+  background: radial-gradient(circle, #fde791, #02b75e 70%);
+  box-shadow:
+    0 0 26px rgb(2 183 94 / 0.85),
+    0 0 44px rgb(253 231 145 / 0.55);
+}
+
+.pulse {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  border-radius: 50%;
+  background: #fde791;
+  box-shadow: 0 0 20px rgb(253 231 145 / 0.9);
+  animation: travelPulse 4.2s linear infinite;
+}
+
+.tile {
+  position: absolute;
+  opacity: 0.12;
+  filter: brightness(6) saturate(0);
+  animation-name: floatTile;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.glowActive {
+  position: absolute;
+  left: 50%;
+  width: 160px;
+  height: 160px;
+  margin-left: -80px;
+  margin-top: -80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(2 183 94 / 0.32), transparent 70%);
+  filter: blur(6px);
+  transition: top var(--dur-slow) var(--ease-out-expo);
+}
+
+@keyframes driftFloor {
+  0% {
+    background-position:
+      0 0,
+      0 0;
+  }
+  100% {
+    background-position:
+      0 480px,
+      480px 0;
+  }
+}
+
+@keyframes travelPulse {
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes floatTile {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(0, -16px, 0) rotate(3deg);
+  }
+}
+
+@media (max-width: 767px) {
+  .stage {
+    transform: rotateX(36deg);
+    transition: none;
+  }
+  .floor,
+  .pulse,
+  .tile {
+    animation: none;
+    opacity: 0.08;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage {
+    transform: rotateX(36deg) !important;
+    transition: none !important;
+  }
+  .floor,
+  .pulse,
+  .tile,
+  .node {
+    animation: none !important;
+    transition: none !important;
+  }
+  .glowActive {
+    transition: none !important;
+  }
+}

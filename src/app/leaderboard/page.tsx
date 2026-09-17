@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import { Info } from "lucide-react";
 import { ButtonLink, Card, EmptyState, PageHero, Section } from "@/components/ui";
 import { getLeaderboard } from "@/lib/leaderboard";
 import { WeekSelect } from "@/components/leaderboard/WeekSelect";
 import { Podium } from "@/components/leaderboard/Podium";
 import { RankTable } from "@/components/leaderboard/RankTable";
+import { Reveal } from "@/components/motion/Reveal";
 
 export const revalidate = 900;
 
@@ -77,6 +79,17 @@ export default async function LeaderboardPage({ searchParams }: PageProps) {
           <WeekSelect weeks={board.weeks} selectedWeek={selectedWeek} />
         </div>
 
+        {board.isSample && (
+          <Reveal variant="fade">
+            <div className="mb-8 flex items-start gap-3 rounded-card border border-line bg-sky p-4 text-navy shadow-e1 sm:p-5">
+              <Info className="mt-0.5 size-5 shrink-0 text-blue" aria-hidden="true" />
+              <p className="text-sm font-semibold sm:text-base">
+                Preview with sample data: real rankings appear after Week 1.
+              </p>
+            </div>
+          </Reveal>
+        )}
+
         {/* Podium (Ranks 1–3) */}
         {podiumEntries.length > 0 && (
           <div className="mb-12">
@@ -98,7 +111,7 @@ export default async function LeaderboardPage({ searchParams }: PageProps) {
         )}
 
         {/* How it works card */}
-        <Card className="bg-surface-alt text-sm text-muted">
+        <Card className="lift bg-surface-alt text-sm text-muted">
           <h3 className="text-base font-bold text-navy">How it works</h3>
           <p className="mt-1 leading-relaxed">
             Points reflect weekly LMS submissions, session attendance and

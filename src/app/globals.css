@@ -127,3 +127,96 @@
     }
   }
 }
+
+/* ---------- Home: stacked, scroll-locked sections ----------
+ * Activated only while HomeScrollMode (src/components/home/HomeScrollMode.tsx) is mounted,
+ * which sets data-stack="on" on <html> for the Home page only and removes it on navigation.
+ * Disabled below the md breakpoint (plain flow reads better on small screens) and fully
+ * neutralised under prefers-reduced-motion.
+ */
+html[data-stack="on"] {
+  scroll-snap-type: y proximity;
+}
+/* Smooth scroll (SmoothScroll.tsx) replaces snapping; the two fight each other. */
+html.lenis-on,
+html.lenis-on[data-stack="on"] {
+  scroll-behavior: auto;
+  scroll-snap-type: none;
+}
+
+@media (min-width: 768px) {
+  html[data-stack="on"] .stack-section {
+    position: sticky;
+    top: 0;
+    min-height: 100svh;
+    overflow: hidden;
+    scroll-snap-align: start;
+  }
+
+  /* Previous card subtly scales down and dims as the next one slides over it. */
+  @supports (animation-timeline: view()) {
+    html[data-stack="on"] .stack-section {
+      animation: stack-recede linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+  }
+}
+
+@keyframes stack-recede {
+  0%,
+  60% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  100% {
+    transform: scale(0.95);
+    filter: brightness(0.88);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-stack="on"] {
+    scroll-snap-type: none;
+  }
+  html[data-stack="on"] .stack-section {
+    position: static !important;
+    animation: none !important;
+  }
+}
+
+/* ---------- Hero background grain texture ---------- */
+.hero-grain {
+  background-image: radial-gradient(circle, rgb(255 255 255 / 0.7) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* ---------- Completion requirements: drawing connector line ----------
+ * Fully drawn by default (safe fallback); animates in growing top-to-bottom only where
+ * scroll-driven animations are supported, and never under prefers-reduced-motion.
+ */
+.connector-line {
+  transform-origin: top;
+  transform: scaleY(1);
+}
+@supports (animation-timeline: view()) {
+  .connector-line {
+    animation: connector-draw linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 80%;
+  }
+}
+@keyframes connector-draw {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .connector-line {
+    animation: none !important;
+    transform: scaleY(1) !important;
+  }
+}

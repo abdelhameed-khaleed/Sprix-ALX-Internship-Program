@@ -1,39 +1,29 @@
 import Link from "next/link";
-import type { ResourceType } from "@/content/resources";
+import { resourceCategories } from "@/content/resources";
 import { site } from "@/content/site";
 import { cx } from "@/components/ui";
 
 type ResourceFiltersProps = {
   activeWeek: string;
-  activeType: string;
-  availableTypes: ResourceType[];
+  activeCategory: string;
 };
 
-const typeLabels: Record<ResourceType, string> = {
-  platform: "Platform",
-  link: "Link",
-  video: "Video",
-  document: "Document",
-  template: "Template",
-};
-
-function buildUrl(week: string, type: string): string {
+function buildUrl(week: string, category: string): string {
   const params = new URLSearchParams();
+  if (category && category !== "all") {
+    params.set("category", category);
+  }
   if (week && week !== "all") {
     params.set("week", week);
-  }
-  if (type && type !== "all") {
-    params.set("type", type);
   }
   const qs = params.toString();
   return qs ? `/resources?${qs}` : "/resources";
 }
 
-export function ResourceFilters({
-  activeWeek,
-  activeType,
-  availableTypes,
-}: ResourceFiltersProps) {
+const chipClass =
+  "inline-flex min-h-11 items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition-[background-color,color,box-shadow] duration-200 focus-visible:ring-2 focus-visible:ring-blue focus-visible:outline-none";
+
+export function ResourceFilters({ activeWeek, activeCategory }: ResourceFiltersProps) {
   const weekOptions = [
     { key: "all", label: "All" },
     { key: "general", label: "General" },
@@ -45,6 +35,52 @@ export function ResourceFilters({
 
   return (
     <div className="space-y-6">
+      {/* Category Filter Chips */}
+      <div>
+        <span
+          id="category-filter-heading"
+          className="block text-xs font-bold tracking-wider text-muted uppercase"
+        >
+          Filter by category
+        </span>
+        <div
+          role="group"
+          aria-labelledby="category-filter-heading"
+          className="mt-2.5 flex flex-wrap gap-2"
+        >
+          <Link
+            href={buildUrl(activeWeek, "all")}
+            aria-current={activeCategory === "all" ? "true" : undefined}
+            className={cx(
+              chipClass,
+              activeCategory === "all"
+                ? "bg-navy text-white shadow-e1"
+                : "border border-line bg-surface-alt text-navy hover:border-blue/40 hover:bg-sky",
+            )}
+          >
+            All categories
+          </Link>
+          {resourceCategories.map((cat) => {
+            const isActive = activeCategory === cat.key;
+            return (
+              <Link
+                key={cat.key}
+                href={buildUrl(activeWeek, cat.key)}
+                aria-current={isActive ? "true" : undefined}
+                className={cx(
+                  chipClass,
+                  isActive
+                    ? "bg-navy text-white shadow-e1"
+                    : "border border-line bg-surface-alt text-navy hover:border-blue/40 hover:bg-sky",
+                )}
+              >
+                {cat.label}
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Week Filter Chips */}
       <div>
         <span
@@ -63,10 +99,10 @@ export function ResourceFilters({
             return (
               <Link
                 key={opt.key}
-                href={buildUrl(opt.key, activeType)}
+                href={buildUrl(opt.key, activeCategory)}
                 aria-current={isActive ? "true" : undefined}
                 className={cx(
-                  "inline-flex min-h-11 items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition-[background-color,color,box-shadow] duration-200 focus-visible:ring-2 focus-visible:ring-blue focus-visible:outline-none",
+                  chipClass,
                   isActive
                     ? "bg-navy text-white shadow-e1"
                     : "border border-line bg-surface-alt text-navy hover:border-blue/40 hover:bg-sky",
@@ -78,54 +114,6 @@ export function ResourceFilters({
           })}
         </div>
       </div>
-
-      {/* Type Filter Chips */}
-      {availableTypes.length > 0 && (
-        <div>
-          <span
-            id="type-filter-heading"
-            className="block text-xs font-bold tracking-wider text-muted uppercase"
-          >
-            Filter by type
-          </span>
-          <div
-            role="group"
-            aria-labelledby="type-filter-heading"
-            className="mt-2.5 flex flex-wrap gap-2"
-          >
-            <Link
-              href={buildUrl(activeWeek, "all")}
-              aria-current={activeType === "all" ? "true" : undefined}
-              className={cx(
-                "inline-flex min-h-11 items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition-[background-color,color,box-shadow] duration-200 focus-visible:ring-2 focus-visible:ring-blue focus-visible:outline-none",
-                activeType === "all"
-                  ? "bg-navy text-white shadow-e1"
-                  : "border border-line bg-surface-alt text-navy hover:border-blue/40 hover:bg-sky",
-              )}
-            >
-              All types
-            </Link>
-            {availableTypes.map((type) => {
-              const isActive = activeType === type;
-              return (
-                <Link
-                  key={type}
-                  href={buildUrl(activeWeek, type)}
-                  aria-current={isActive ? "true" : undefined}
-                  className={cx(
-                    "inline-flex min-h-11 items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition-[background-color,color,box-shadow] duration-200 focus-visible:ring-2 focus-visible:ring-blue focus-visible:outline-none",
-                    isActive
-                      ? "bg-navy text-white shadow-e1"
-                      : "border border-line bg-surface-alt text-navy hover:border-blue/40 hover:bg-sky",
-                  )}
-                >
-                  {typeLabels[type] ?? type}
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

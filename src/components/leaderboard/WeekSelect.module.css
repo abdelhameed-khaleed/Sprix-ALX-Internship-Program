@@ -1,0 +1,21 @@
+.group {
+  position: relative;
+}
+
+.pill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  border-radius: 9999px;
+  transition:
+    transform var(--dur-base) var(--ease-out-expo),
+    width var(--dur-base) var(--ease-out-expo),
+    height var(--dur-base) var(--ease-out-expo);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pill {
+    transition: none !important;
+  }
+}

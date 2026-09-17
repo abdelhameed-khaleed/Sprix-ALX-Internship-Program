@@ -1,43 +1,25 @@
-import {
-  FileText,
-  Info,
-  LayoutTemplate,
-  Link2,
-  MonitorSmartphone,
-  PlayCircle,
-} from "lucide-react";
-import type { Resource, ResourceType } from "@/content/resources";
+import { FolderOpen, Info, Landmark, Presentation, Video } from "lucide-react";
+import type { Resource, ResourceCategory } from "@/content/resources";
 import { Badge, ButtonLink, Card, IconTile } from "@/components/ui";
 
-const typeIconMap: Record<ResourceType, typeof Link2> = {
-  platform: MonitorSmartphone,
-  link: Link2,
-  video: PlayCircle,
-  document: FileText,
-  template: LayoutTemplate,
+const categoryIconMap: Record<ResourceCategory, typeof Video> = {
+  "walkthrough-recording": Video,
+  slides: Presentation,
+  "friday-session": Landmark,
+  other: FolderOpen,
 };
 
-function getActionLabel(type: ResourceType): string {
-  switch (type) {
-    case "video":
-      return "Watch";
-    case "document":
-    case "template":
-      return "Download";
-    case "platform":
-    case "link":
-    default:
-      return "Open";
-  }
+function getActionLabel(category: ResourceCategory): string {
+  return category === "walkthrough-recording" ? "Watch" : "Open";
 }
 
 export function ResourceCard({ resource }: { resource: Resource }) {
-  const Icon = typeIconMap[resource.type] ?? Link2;
+  const Icon = categoryIconMap[resource.category] ?? FolderOpen;
   const weekLabel = resource.week === "general" ? "General" : `Week ${resource.week}`;
-  const actionLabel = getActionLabel(resource.type);
+  const actionLabel = getActionLabel(resource.category);
 
   return (
-    <Card className="flex h-full flex-col justify-between transition-shadow duration-200 hover:shadow-e2">
+    <Card interactive className="lift flex h-full flex-col justify-between">
       <div>
         <div className="flex items-center justify-between gap-2">
           <IconTile tone="blue">

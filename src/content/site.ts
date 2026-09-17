@@ -3,7 +3,6 @@
 export const site = {
   name: "ALX × SPRIX Professional Skills Program",
   shortName: "ALX × SPRIX",
-  tagline: "7 weeks to the skills employers look for — and most tech programs don't teach.",
   description:
     "The ALX Professional Skills training gives entry-level tech talent a strong advantage with “The ALX Special Sauce”: the knowledge, skill sets and character qualities highly desired by employers but not taught in most tech training programs.",
   timezone: "Africa/Cairo",
@@ -18,6 +17,11 @@ export const site = {
   },
   links: {
     alx: "https://www.alxafrica.com/",
+  },
+  /** Optional hero background video. Owner will supply /public/media/hero.mp4 later. */
+  hero: {
+    video: undefined as string | undefined,
+    poster: undefined as string | undefined,
   },
 } as const;
 

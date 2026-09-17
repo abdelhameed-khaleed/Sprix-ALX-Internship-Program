@@ -1,5 +1,6 @@
-import { describe, expect, it } from "vitest";
-import { buildLeaderboard, parseLeaderboardCsv, rankWeek } from "@/lib/leaderboard";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { buildLeaderboard, getLeaderboard, parseLeaderboardCsv, rankWeek } from "@/lib/leaderboard";
+import { sampleLeaderboardEntries } from "@/content/leaderboard-sample";
 
 describe("parseLeaderboardCsv", () => {
   it("parses valid rows with flexible headers and optional badge", () => {
@@ -52,5 +53,35 @@ describe("buildLeaderboard", () => {
       { week: 1, name: "B", points: 1 },
     ]);
     expect(board.status === "ok" && board.weeks).toEqual([1, 3]);
+  });
+});
+
+describe("getLeaderboard", () => {
+  const originalUrl = process.env.LEADERBOARD_CSV_URL;
+
+  afterEach(() => {
+    if (originalUrl === undefined) delete process.env.LEADERBOARD_CSV_URL;
+    else process.env.LEADERBOARD_CSV_URL = originalUrl;
+  });
+
+  it("returns the sample board, flagged with isSample, when no CSV URL is configured", async () => {
+    delete process.env.LEADERBOARD_CSV_URL;
+    const board = await getLeaderboard();
+    expect(board.status).toBe("ok");
+    if (board.status !== "ok") return;
+    expect(board.isSample).toBe(true);
+    expect(board.weeks).toEqual([...new Set(sampleLeaderboardEntries.map((e) => e.week))].sort());
+    expect(board.byWeek[1].length).toBeGreaterThan(0);
+  });
+
+  it("is unavailable when a CSV URL is configured but the request fails", async () => {
+    process.env.LEADERBOARD_CSV_URL = "https://example.com/does-not-exist.csv";
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("network error"));
+    try {
+      const board = await getLeaderboard();
+      expect(board.status).toBe("unavailable");
+    } finally {
+      fetchSpy.mockRestore();
+    }
   });
 });
