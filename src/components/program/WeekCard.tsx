@@ -71,8 +71,8 @@ export function WeekCard({
         id={triggerId}
         aria-expanded={isExpanded}
         aria-controls={panelId}
+        // Click/tap/keyboard only: opening on hover made cards expand while the page scrolled under the pointer (layout thrash + lag).
         onClick={() => onActivate("click")}
-        onMouseEnter={() => onActivate("hover")}
         className={cx(styles.trigger, "p-5 sm:p-6")}
       >
         <div className="flex flex-col gap-4">

@@ -23,7 +23,9 @@
 
 .floor {
   position: absolute;
-  inset: -40% -60%;
+  /* Oversized so the tile-period translate loop never shows an edge. */
+  inset: -60% -80%;
+  will-change: transform;
   background-image:
     repeating-linear-gradient(0deg, rgb(197 229 255 / 0.16) 0 1px, transparent 1px 64px),
     repeating-linear-gradient(90deg, rgb(197 229 255 / 0.16) 0 1px, transparent 1px 64px);
@@ -63,9 +65,20 @@
     0 0 44px rgb(253 231 145 / 0.55);
 }
 
-.pulse {
+/* Full-height carrier: translating it by 100% of its own height moves the dot down the track (compositor-only). */
+.pulseCarrier {
   position: absolute;
   left: 50%;
+  top: 2%;
+  height: 96%;
+  width: 0;
+  will-change: transform;
+  animation: travelPulse 4.2s linear infinite;
+}
+
+.pulse {
+  position: absolute;
+  left: 0;
   top: 0;
   width: 8px;
   height: 8px;
@@ -73,7 +86,6 @@
   border-radius: 50%;
   background: #fde791;
   box-shadow: 0 0 20px rgb(253 231 145 / 0.9);
-  animation: travelPulse 4.2s linear infinite;
 }
 
 .tile {
@@ -83,6 +95,7 @@
   animation-name: floatTile;
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
+  will-change: transform;
 }
 
 .glowActive {
@@ -93,27 +106,22 @@
   margin-left: -80px;
   margin-top: -80px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgb(2 183 94 / 0.32), transparent 70%);
-  filter: blur(6px);
+  background: radial-gradient(circle, rgb(2 183 94 / 0.3), rgb(2 183 94 / 0.08) 45%, transparent 72%);
   transition: top var(--dur-slow) var(--ease-out-expo);
 }
 
 @keyframes driftFloor {
-  0% {
-    background-position:
-      0 0,
-      0 0;
+  from {
+    transform: translate3d(0, 0, 0);
   }
-  100% {
-    background-position:
-      0 480px,
-      480px 0;
+  to {
+    transform: translate3d(64px, 64px, 0); /* one grid period: seamless loop */
   }
 }
 
 @keyframes travelPulse {
   0% {
-    top: 0%;
+    transform: translate3d(0, 0, 0);
     opacity: 0;
   }
   8% {
@@ -123,9 +131,16 @@
     opacity: 1;
   }
   100% {
-    top: 100%;
+    transform: translate3d(0, 100%, 0);
     opacity: 0;
   }
+}
+
+/* Off-screen: stop every loop so the page doesn't repaint a scene nobody can see. */
+.paused .floor,
+.paused .pulseCarrier,
+.paused .tile {
+  animation-play-state: paused;
 }
 
 @keyframes floatTile {
@@ -144,7 +159,7 @@
     transition: none;
   }
   .floor,
-  .pulse,
+  .pulseCarrier,
   .tile {
     animation: none;
     opacity: 0.08;
@@ -157,7 +172,7 @@
     transition: none !important;
   }
   .floor,
-  .pulse,
+  .pulseCarrier,
   .tile,
   .node {
     animation: none !important;

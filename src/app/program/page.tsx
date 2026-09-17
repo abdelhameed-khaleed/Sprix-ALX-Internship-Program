@@ -16,7 +16,7 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: "Program",
   description:
-    "Explore the 7-week curriculum of the ALX × SPRIX Professional Skills Program, week by week.",
+    "Explore the 7-week curriculum of the ALX Ã— SPRIX Professional Skills Program, week by week.",
 };
 
 const cadenceIconMap = {
@@ -45,13 +45,13 @@ export default function ProgramPage() {
 
   const progressLabel =
     status.status === "completed"
-      ? `Week ${site.totalWeeks} of ${site.totalWeeks} · Complete`
+      ? `Week ${site.totalWeeks} of ${site.totalWeeks} Â· Complete`
       : status.status === "active"
         ? `Week ${status.week.number} of ${site.totalWeeks}`
         : `${site.totalWeeks}-week program`;
 
   // Weekly rhythm: highlight whichever cadence item (Tue walkthrough / Fri workshop / Sun
-  // deadline) is soonest from today, wrapping forward through the Sun→Sat week.
+  // deadline) is soonest from today, wrapping forward through the Sunâ†’Sat week.
   const todayIndex = getCairoWeekdayIndex(now);
   const cadenceDistance = (day: string) => (((CADENCE_DAY_INDEX[day] ?? 0) - todayIndex + 7) % 7);
   const nearestDistance = Math.min(...weeklyCadence.map((c) => cadenceDistance(c.day)));
@@ -153,7 +153,7 @@ export default function ProgramPage() {
         tone="alt"
         eyebrow="Curriculum"
         title="Your 7-week journey"
-        intro="Hover or select any week to pop its details forward: learning outcome, expert session topic, deliverable and this week's session links. Only one week is open at a time, and this week starts expanded."
+        intro="Select any week to pop its details forward: learning outcome, expert session topic, deliverable and this week's session links. Only one week is open at a time, and this week starts expanded."
       >
         <WeekTimeline weeks={weeks} currentWeekNumber={currentWeekNumber} nowIso={now.toISOString()} />
       </Section>

@@ -44,32 +44,58 @@ export function WeekTimeline({ weeks, currentWeekNumber, nowIso }: WeekTimelineP
     const listEl = listRef.current;
     if (!listEl) return;
 
+    // Card expand/collapse fires ResizeObserver on every animation frame; batch reads into one
+    // rAF and skip re-rendering the timeline when nothing moved by a whole pixel.
+    let rafId = 0;
     function measure() {
       if (!listEl) return;
-      const containerTop = listEl.getBoundingClientRect().top;
-      const height = listEl.getBoundingClientRect().height;
+      const listRect = listEl.getBoundingClientRect();
       const nodeYs = itemRefs.current.map((el) => {
         if (!el) return 0;
         const r = el.getBoundingClientRect();
-        return r.top - containerTop + r.height / 2;
+        return Math.round(r.top - listRect.top + r.height / 2);
       });
-      setMetrics({ nodeYs, height });
+      const height = Math.round(listRect.height);
+      setMetrics((prev) =>
+        prev.height === height && prev.nodeYs.length === nodeYs.length && prev.nodeYs.every((y, i) => y === nodeYs[i])
+          ? prev
+          : { nodeYs, height },
+      );
+    }
+    function scheduleMeasure() {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = 0;
+        measure();
+      });
     }
 
     measure();
-    const observer = new ResizeObserver(measure);
+    const observer = new ResizeObserver(scheduleMeasure);
     observer.observe(listEl);
     itemRefs.current.forEach((el) => el && observer.observe(el));
-    window.addEventListener("resize", measure);
+    window.addEventListener("resize", scheduleMeasure);
     return () => {
       observer.disconnect();
-      window.removeEventListener("resize", measure);
+      window.removeEventListener("resize", scheduleMeasure);
+      if (rafId) cancelAnimationFrame(rafId);
     };
   }, [weeks.length]);
 
+  // Pause the 3D background loops while the timeline is off-screen.
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [offscreen, setOffscreen] = useState(true);
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([entry]) => setOffscreen(!entry.isIntersecting), { rootMargin: "100px" });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <div className={styles.wrap}>
-      <Timeline3D total={weeks.length} activeIndex={activeIndex} />
+    <div ref={wrapRef} className={styles.wrap}>
+      <Timeline3D total={weeks.length} activeIndex={activeIndex} paused={offscreen} />
 
       <div className={styles.row}>
         <RocketPath

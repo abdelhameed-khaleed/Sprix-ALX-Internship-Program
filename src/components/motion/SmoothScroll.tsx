@@ -16,7 +16,7 @@ export function SmoothScroll() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const lenis = new Lenis({
-      lerp: 0.08, // lower = lazier glide
+      lerp: 0.1, // lower = lazier glide (0.08 felt sluggish on long pages like /program)
       wheelMultiplier: 0.9,
       anchors: true,
     });

@@ -5,6 +5,8 @@ import styles from "./Timeline3D.module.css";
 type Timeline3DProps = {
   total: number;
   activeIndex: number;
+  /** Pause the looping animations (set while the timeline is off-screen). */
+  paused?: boolean;
 };
 
 const PATTERN_TILES = [
@@ -19,13 +21,13 @@ const PATTERN_TILES = [
  * ALX pattern tiles. Purely presentational (aria-hidden); shares `activeIndex` state
  * with the foreground week cards so the scene reacts to the selected week.
  */
-export function Timeline3D({ total, activeIndex }: Timeline3DProps) {
+export function Timeline3D({ total, activeIndex, paused }: Timeline3DProps) {
   const safeTotal = Math.max(total, 1);
   const depth = safeTotal > 1 ? activeIndex / (safeTotal - 1) : 0;
   const stageStyle = { "--depth": depth } as CSSProperties;
 
   return (
-    <div className={styles.scene} aria-hidden="true">
+    <div className={cx(styles.scene, paused && styles.paused)} aria-hidden="true">
       <div className={styles.stage} style={stageStyle}>
         <div className={styles.floor} />
         <div className={styles.track} />
@@ -44,7 +46,9 @@ export function Timeline3D({ total, activeIndex }: Timeline3DProps) {
           );
         })}
 
-        <span className={styles.pulse} style={{ animationDelay: `${-depth * 2.6}s` }} />
+        <span className={styles.pulseCarrier} style={{ animationDelay: `${-depth * 2.6}s` }}>
+          <span className={styles.pulse} />
+        </span>
 
         {PATTERN_TILES.map((tile, i) => (
           // eslint-disable-next-line @next/next/no-img-element
