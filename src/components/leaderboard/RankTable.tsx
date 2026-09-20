@@ -57,7 +57,7 @@ export function RankTable({ entries, weekNumber }: RankTableProps) {
                 {entry.badge ? (
                   <Badge tone="blue">{entry.badge}</Badge>
                 ) : (
-                  <span className="text-muted">—</span>
+                  <span className="text-muted">-</span>
                 )}
               </td>
             </Reveal>

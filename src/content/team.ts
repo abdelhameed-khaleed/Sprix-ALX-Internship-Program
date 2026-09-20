@@ -47,6 +47,48 @@ export const technicalIssues: TechnicalIssue[] = [
   },
 ];
 
+/** Everything that is not a technical bug: goes to the program team, not to Freshdesk. */
+export const programQuestions: { title: string; description: string; icon: ProgramQuestionIcon }[] = [
+  {
+    title: "Schedule & sessions",
+    description: "Session times, venues, and the weekly rhythm",
+    icon: "calendar",
+  },
+  {
+    title: "Deadlines & submissions",
+    description: "When work is due and what counts as submitted",
+    icon: "clock",
+  },
+  {
+    title: "Coursework guidance",
+    description: "Help understanding a module, task or deliverable",
+    icon: "book",
+  },
+  {
+    title: "Mastery project",
+    description: "Project scope, teams, and Pitching Day",
+    icon: "rocket",
+  },
+  {
+    title: "Attendance & certificate",
+    description: "Completion requirements and graduation",
+    icon: "award",
+  },
+  {
+    title: "Anything else",
+    description: "Not sure who to ask? Start here",
+    icon: "chat",
+  },
+];
+
+export type ProgramQuestionIcon =
+  | "calendar"
+  | "clock"
+  | "book"
+  | "rocket"
+  | "award"
+  | "chat";
+
 export type TeamMember = {
   name: string;
   nickname?: string;
@@ -55,7 +97,7 @@ export type TeamMember = {
   isMainContact?: boolean;
   /** Path under /public, e.g. "/team/hamedo.jpg". Initials avatar is used when omitted. */
   photo?: string;
-  /** wa.me link — phone number is intentionally not displayed as text. */
+  /** wa.me link. The phone number is intentionally not displayed as text. */
   whatsapp?: string;
   email?: string;
 };
@@ -75,6 +117,18 @@ export const team: TeamMember[] = [
     photo: "/team/abdelhameed.jpg",
     whatsapp: "https://wa.me/201554057372",
   },
+  {
+    name: "Aalaa Abdelfadil",
+    role: "Learning Experience Manager",
+    contactAbout: [
+      "Learning experience, content and curriculum",
+      "Escalations about the program experience",
+      "Partnership and program-level questions",
+    ],
+    photo: "/team/aalaa.jpg",
+    // TODO: add Aalaa's work email here to show the "Send an email" button.
+    email: undefined,
+  },
 ];
 
 export const faqs: { question: string; answer: string }[] = [
@@ -89,7 +143,7 @@ export const faqs: { question: string; answer: string }[] = [
   },
   {
     question: "When is the weekly submission deadline?",
-    answer: "Every Sunday at 11:59 PM (Cairo time) on Savanna.",
+    answer: "Every Monday at 11:59 PM (Cairo time) on Savanna.",
   },
   {
     question: "Do I have to attend the sessions?",

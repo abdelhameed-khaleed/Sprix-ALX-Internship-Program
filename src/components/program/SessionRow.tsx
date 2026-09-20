@@ -25,7 +25,7 @@ export function SessionRow({ session }: { session: SessionInfo }) {
   const Icon = isOnline ? Video : Landmark;
   const actionLabel = isOnline ? "Join on Zoom" : "Register to attend";
   const comingSoonLabel = isOnline ? "Zoom link coming soon" : "Registration opens soon";
-  const title = isOnline ? "Online walkthrough" : "Offline workshop @ ALX Hub";
+  const title = isOnline ? session.title : `${session.title} @ ALX Hub`;
   const metaLabel = isOnline ? `${session.dateLabel} · ${session.time} · Zoom` : `${session.dateLabel} · ${session.time}`;
 
   return (

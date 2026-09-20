@@ -18,6 +18,13 @@ export const site = {
   support: {
     ticketUrl: "https://help.alxafrica.com/en/support/tickets/new",
   },
+  /** Shared program calendar: every session, deadline and event, in Cairo time. */
+  calendar: {
+    embedUrl:
+      "https://calendar.google.com/calendar/embed?src=c_6e61934c4f4ec4903650d2127d4ff1a457e375b81d028f12c1a4556d1815ba5f%40group.calendar.google.com&ctz=Africa%2FCairo",
+    addUrl:
+      "https://calendar.google.com/calendar/render?cid=c_6e61934c4f4ec4903650d2127d4ff1a457e375b81d028f12c1a4556d1815ba5f%40group.calendar.google.com",
+  },
   links: {
     alx: "https://www.alxafrica.com/",
   },
@@ -44,7 +51,7 @@ export type CadenceIcon = "video" | "building" | "alarm";
 export const weeklyCadence: { day: string; time: string; title: string; where: string; icon: CadenceIcon }[] = [
   { day: "Tuesday", time: "6:00 PM", title: "Online Walkthrough", where: "Zoom", icon: "video" },
   { day: "Friday", time: "4:00 PM", title: "Offline Workshop", where: "ALX Hub", icon: "building" },
-  { day: "Sunday", time: "11:59 PM", title: "LMS Submission Deadline", where: "Savanna", icon: "alarm" },
+  { day: "Monday", time: "11:59 PM", title: "LMS Submission Deadline", where: "Savanna", icon: "alarm" },
 ];
 
 export type RequirementIcon = "verified" | "users" | "presentation";

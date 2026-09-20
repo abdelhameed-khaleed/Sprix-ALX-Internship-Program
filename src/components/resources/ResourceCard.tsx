@@ -1,4 +1,5 @@
-import { FolderOpen, Info, Landmark, Presentation, Video } from "lucide-react";
+import Image from "next/image";
+import { Camera, FolderOpen, Info, Landmark, Presentation, Video } from "lucide-react";
 import type { Resource, ResourceCategory } from "@/content/resources";
 import { Badge, ButtonLink, Card, IconTile } from "@/components/ui";
 
@@ -6,11 +7,14 @@ const categoryIconMap: Record<ResourceCategory, typeof Video> = {
   "walkthrough-recording": Video,
   slides: Presentation,
   "friday-session": Landmark,
+  events: Camera,
   other: FolderOpen,
 };
 
 function getActionLabel(category: ResourceCategory): string {
-  return category === "walkthrough-recording" ? "Watch" : "Open";
+  if (category === "walkthrough-recording") return "Watch";
+  if (category === "events") return "View all photos";
+  return "Open";
 }
 
 export function ResourceCard({ resource }: { resource: Resource }) {
@@ -21,6 +25,17 @@ export function ResourceCard({ resource }: { resource: Resource }) {
   return (
     <Card interactive className="lift flex h-full flex-col justify-between">
       <div>
+        {resource.image && (
+          <div className="mb-4 -mx-6 -mt-6 overflow-hidden rounded-t-card">
+            <Image
+              src={resource.image}
+              alt={`Photo from ${resource.title}`}
+              width={640}
+              height={360}
+              className="h-44 w-full object-cover"
+            />
+          </div>
+        )}
         <div className="flex items-center justify-between gap-2">
           <IconTile tone="blue">
             <Icon className="size-6 text-navy" aria-hidden="true" />

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { Building2, Clock, Video } from "lucide-react";
-import { PageHero, Section, Card, IconTile, cx } from "@/components/ui";
+import { Building2, CalendarPlus, Clock, Video } from "lucide-react";
+import { PageHero, Section, Card, IconTile, ButtonLink, cx } from "@/components/ui";
 import { CompletionRequirements } from "@/components/sections/CompletionRequirements";
 import { site, weeklyCadence } from "@/content/site";
 import { weeks } from "@/content/program";
@@ -16,7 +16,7 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: "Program",
   description:
-    "Explore the 7-week curriculum of the ALX Ã— SPRIX Professional Skills Program, week by week.",
+    "Explore the 7-week curriculum of the ALX × SPRIX Professional Skills Program, week by week.",
 };
 
 const cadenceIconMap = {
@@ -45,7 +45,7 @@ export default function ProgramPage() {
 
   const progressLabel =
     status.status === "completed"
-      ? `Week ${site.totalWeeks} of ${site.totalWeeks} Â· Complete`
+      ? `Week ${site.totalWeeks} of ${site.totalWeeks} · Complete`
       : status.status === "active"
         ? `Week ${status.week.number} of ${site.totalWeeks}`
         : `${site.totalWeeks}-week program`;
@@ -147,10 +147,40 @@ export default function ProgramPage() {
         </Reveal>
       </Section>
 
+      {/* Shared program calendar */}
+      <Section
+        id="calendar"
+        tone="alt"
+        eyebrow="Program calendar"
+        title="Every session in one calendar"
+        intro="Walkthroughs, workshops, deadlines and events, all in Cairo time. Add it to your own calendar so nothing slips past you."
+      >
+        <Reveal variant="fade">
+          <div className="overflow-hidden rounded-card border border-line bg-white shadow-e1">
+            <iframe
+              src={site.calendar.embedUrl}
+              title="ALX x SPRIX program calendar"
+              className="h-[520px] w-full border-0 sm:h-[600px]"
+              loading="lazy"
+            />
+          </div>
+        </Reveal>
+        <Reveal variant="fade" delay={80}>
+          <div className="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+            <ButtonLink href={site.calendar.addUrl} external variant="primary">
+              <CalendarPlus className="size-5" aria-hidden="true" />
+              Add to your calendar
+            </ButtonLink>
+            <p className="text-sm text-muted">
+              Opens in Google Calendar. All times are Cairo time (Africa/Cairo).
+            </p>
+          </div>
+        </Reveal>
+      </Section>
+
       {/* Interactive Week Breakdown */}
       <Section
         id="timeline"
-        tone="alt"
         eyebrow="Curriculum"
         title="Your 7-week journey"
         intro="Select any week to pop its details forward: learning outcome, expert session topic, deliverable and this week's session links. Only one week is open at a time, and this week starts expanded."

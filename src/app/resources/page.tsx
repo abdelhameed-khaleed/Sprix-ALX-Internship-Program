@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { FolderOpen, Landmark, Presentation, Video } from "lucide-react";
+import { Camera, FolderOpen, Landmark, Presentation, Video } from "lucide-react";
 import { EmptyState, IconTile, PageHero, Section } from "@/components/ui";
 import { resources, resourceCategories, type ResourceCategory } from "@/content/resources";
 import { ResourceCard } from "@/components/resources/ResourceCard";
@@ -16,6 +16,7 @@ const categoryIconMap: Record<ResourceCategory, typeof Video> = {
   "walkthrough-recording": Video,
   slides: Presentation,
   "friday-session": Landmark,
+  events: Camera,
   other: FolderOpen,
 };
 
@@ -51,7 +52,7 @@ export default async function ResourcesPage({ searchParams }: PageProps) {
       <PageHero
         eyebrow="Resources"
         title="Everything you need, in one place"
-        intro="Walkthrough recordings, slides, Friday session materials and official program links — organised by category and week."
+        intro="Walkthrough recordings, slides, Friday session materials, event photos and official program links, organised by category and week."
         pattern="/brand/patterns/Group-460.png"
       />
 

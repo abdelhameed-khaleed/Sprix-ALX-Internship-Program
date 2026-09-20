@@ -50,7 +50,7 @@ export function WeekCard({
   const Icon = iconMap[week.icon] ?? Brain;
   const triggerId = `week-trigger-${week.number}`;
   const panelId = `week-panel-${week.number}`;
-  const [onlineSession, offlineSession] = getWeekSessions(week, now);
+  const sessions = getWeekSessions(week, now);
 
   return (
     <article
@@ -172,13 +172,16 @@ export function WeekCard({
               </div>
             )}
 
-            <div className="pt-1">
-              <h4 className="text-xs font-bold tracking-wider text-muted uppercase">This week&apos;s sessions</h4>
-              <div className="mt-2 space-y-2">
-                <SessionRow session={onlineSession} />
-                <SessionRow session={offlineSession} />
+            {sessions.length > 0 && (
+              <div className="pt-1">
+                <h4 className="text-xs font-bold tracking-wider text-muted uppercase">This week&apos;s sessions</h4>
+                <div className="mt-2 space-y-2">
+                  {sessions.map((session) => (
+                    <SessionRow key={session.kind} session={session} />
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

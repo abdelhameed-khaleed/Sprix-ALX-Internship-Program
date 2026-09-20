@@ -70,7 +70,7 @@ export function UpNext({ initialNow }: { initialNow: string }) {
     const isOnline = session.kind === "online";
     icon = isOnline ? <Video className="size-6 text-icy" aria-hidden="true" /> : <Landmark className="size-6 text-icy" aria-hidden="true" />;
     eyebrow = "Up next";
-    title = isOnline ? "Online walkthrough" : "Offline workshop @ ALX Hub";
+    title = isOnline ? session.title : `${session.title} @ ALX Hub`;
     meta = isOnline ? `${session.dateLabel} · ${session.time} · Zoom` : `${session.dateLabel} · ${session.time}`;
     if (session.state === "live") {
       liveLabel = "Live now";

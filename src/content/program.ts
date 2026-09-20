@@ -23,6 +23,12 @@ export type Week = {
     zoomUrl?: string;
     /** Friday 4:00 PM offline workshop at the ALX Hub (registration is required every week). */
     registrationUrl?: string;
+    /** Set false when this week has no Tuesday online walkthrough. Defaults to true. */
+    online?: boolean;
+    /** Set false when this week has no Friday offline session. Defaults to true. */
+    offline?: boolean;
+    /** Overrides the "Offline workshop" label for this week, e.g. "Final Presentation". */
+    offlineTitle?: string;
   };
 };
 
@@ -30,7 +36,8 @@ export type Week = {
  * Link shared by every week when there's a single recurring Zoom meeting. A week's own
  * `sessions.zoomUrl` overrides it.
  */
-export const defaultZoomUrl: string | undefined = undefined;
+export const defaultZoomUrl: string | undefined =
+  "https://alxafrica.zoom.us/s/84986339823?pwd=5plQYxq6WXmXaRDjljREyY4pEFvH0E.1";
 
 export const weeks: Week[] = [
   {
@@ -102,6 +109,7 @@ export const weeks: Week[] = [
       "Form your project team and finalize your mastery graduation project, getting ready to present a live solution to a panel of judges.",
     deliverable: "Mastery project ready to pitch",
     icon: "hammer",
+    sessions: { online: false, offline: false },
   },
   {
     number: 7,
@@ -116,5 +124,6 @@ export const weeks: Week[] = [
     highlight: "Friday 4:00 PM · Final Demo Showcase @ ALX Hub",
     icon: "trophy",
     isFinal: true,
+    sessions: { online: false, offlineTitle: "Final Presentation" },
   },
 ];

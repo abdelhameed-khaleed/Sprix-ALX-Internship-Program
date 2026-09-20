@@ -124,10 +124,11 @@ function buildSession(
 ): SessionInfo {
   const startUtc = zonedTimeToUtc(sessionDate, hour, minute, timeZone);
   const endUtc = new Date(startUtc.getTime() + SESSION_DURATION_MS);
+  const offlineTitle = week.sessions?.offlineTitle ?? "Offline workshop";
   return {
     weekNumber: week.number,
     kind,
-    title: kind === "online" ? "Online walkthrough" : "Offline workshop",
+    title: kind === "online" ? "Online walkthrough" : offlineTitle,
     date: sessionDate,
     dateLabel: formatDateLabel(sessionDate),
     time: formatTimeLabel(hour, minute),
@@ -142,16 +143,22 @@ function buildSession(
  * Tuesday = week start + 2 days, 6:00 PM. Friday = week start + 5 days, 4:00 PM.
  * Falls back to `defaultZoomUrl` for the online session when the week has no zoomUrl of
  * its own; the offline registration link has no such fallback (registration is per-session).
+ * A week that sets `sessions.online` or `sessions.offline` to false has no session of that
+ * kind at all, so it is left out here and never shows up in "up next" either.
  */
 export function getWeekSessions(week: Week, now: Date = new Date(), timeZone: string = site.timezone): SessionInfo[] {
   const tuesday = addDays(week.startDate, 2);
   const friday = addDays(week.startDate, 5);
   const zoomUrl = week.sessions?.zoomUrl ?? defaultZoomUrl;
   const registrationUrl = week.sessions?.registrationUrl;
-  return [
-    buildSession(week, "online", tuesday, 18, 0, zoomUrl, now, timeZone),
-    buildSession(week, "offline", friday, 16, 0, registrationUrl, now, timeZone),
-  ];
+  const sessions: SessionInfo[] = [];
+  if (week.sessions?.online !== false) {
+    sessions.push(buildSession(week, "online", tuesday, 18, 0, zoomUrl, now, timeZone));
+  }
+  if (week.sessions?.offline !== false) {
+    sessions.push(buildSession(week, "offline", friday, 16, 0, registrationUrl, now, timeZone));
+  }
+  return sessions;
 }
 
 /** The next upcoming or live session across every week, or undefined once they've all passed. */

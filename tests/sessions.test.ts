@@ -5,7 +5,7 @@ import {
   getWeekProgress,
   getWeekSessions,
 } from "@/lib/sessions";
-import type { Week } from "@/content/program";
+import { defaultZoomUrl, type Week } from "@/content/program";
 
 // Cairo is UTC+3 in Sep–Oct 2026 (DST ends 29 Oct), UTC+2 afterwards — same rule the
 // existing current-week tests rely on.
@@ -54,11 +54,24 @@ describe("getWeekSessions", () => {
     expect(offline.url).toBeUndefined();
   });
 
-  it("has undefined urls (not the string 'undefined') when nothing is configured", () => {
+  it("falls back to defaultZoomUrl online and has no offline url when nothing is configured", () => {
     const week = makeWeek();
     const [online, offline] = getWeekSessions(week, new Date("2026-09-01T00:00:00Z"));
-    expect(online.url).toBeUndefined();
+    expect(online.url).toBe(defaultZoomUrl);
+    // Never the string "undefined" leaking in from a template literal.
+    expect(online.url).not.toBe("undefined");
     expect(offline.url).toBeUndefined();
+  });
+
+  it("leaves out the sessions a week switches off, and renames the offline one", () => {
+    const noSessions = makeWeek({ sessions: { online: false, offline: false } });
+    expect(getWeekSessions(noSessions, new Date("2026-09-01T00:00:00Z"))).toHaveLength(0);
+
+    const offlineOnly = makeWeek({ sessions: { online: false, offlineTitle: "Final Presentation" } });
+    const sessions = getWeekSessions(offlineOnly, new Date("2026-09-01T00:00:00Z"));
+    expect(sessions).toHaveLength(1);
+    expect(sessions[0].kind).toBe("offline");
+    expect(sessions[0].title).toBe("Final Presentation");
   });
 
   describe("state", () => {
