@@ -69,6 +69,22 @@ export const resourceCategories: ResourceCategoryMeta[] = [
 
 export const resources: Resource[] = [
   {
+    id: "week-1-walkthrough-recording",
+    title: "Week 1 walkthrough recording",
+    description: "Recording of the Week 1 Tuesday walkthrough session.",
+    category: "walkthrough-recording",
+    week: 1,
+    url: "https://alxafrica.zoom.us/rec/share/HSCmZ0UgFRbe_CeH14AmQFVy0dHxqXrvwIe7B_mnSbUUHWvqPDAu2w3HytXvZt6k.z0f2of96AMsPcUDP",
+  },
+  {
+    id: "week-1-session-slides",
+    title: "Week 1 session slides",
+    description: "Presentation deck used in the Week 1 walkthrough session.",
+    category: "slides",
+    week: 1,
+    url: "https://docs.google.com/presentation/d/1fI85exb6mSmJbpFNMRP-eisCSSnDzsyS40Wf5hhrkZA/edit?slide=id.p18#slide=id.p18",
+  },
+  {
     id: "onboarding-slides",
     title: "Onboarding slides",
     description:
