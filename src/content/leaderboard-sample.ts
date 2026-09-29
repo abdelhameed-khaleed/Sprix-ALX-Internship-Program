@@ -1,8 +1,9 @@
 import type { LeaderboardEntry } from "@/lib/leaderboard";
 
 // Sample leaderboard data shown until LEADERBOARD_CSV_URL is configured with a real
-// published Google Sheet. Display names only (first name + last initial), matching the
-// constitution's privacy rule for learner data.
+// published Google Sheet. Display names default to first name + last initial, matching
+// the constitution's privacy rule for learner data. The Week 2 top 3 use full names at
+// the program owner's explicit request.
 
 export const sampleLeaderboardEntries: LeaderboardEntry[] = [
   // Week 1
@@ -16,9 +17,9 @@ export const sampleLeaderboardEntries: LeaderboardEntry[] = [
   { week: 1, name: "Laila F.", points: 69 },
 
   // Week 2
-  { week: 2, name: "Maryam N.", points: 98, badge: "Most consistent" },
-  { week: 2, name: "Marim M.", points: 94 },
-  { week: 2, name: "Mohamed W.", points: 89 },
+  { week: 2, name: "Maryam Nashaat", points: 98, badge: "Most consistent" },
+  { week: 2, name: "Marim Mostafa", points: 94 },
+  { week: 2, name: "Mohamed Waleed", points: 89 },
   { week: 2, name: "Youssef S.", points: 87 },
   { week: 2, name: "Salma B.", points: 85, badge: "Best peer support" },
   { week: 2, name: "Omar K.", points: 80 },
