@@ -16,10 +16,10 @@ export const sampleLeaderboardEntries: LeaderboardEntry[] = [
   { week: 1, name: "Laila F.", points: 69 },
 
   // Week 2
-  { week: 2, name: "Hana R.", points: 98, badge: "Most consistent" },
-  { week: 2, name: "Mariam A.", points: 94 },
-  { week: 2, name: "Khaled N.", points: 89 },
-  { week: 2, name: "Youssef S.", points: 89 },
+  { week: 2, name: "Maryam N.", points: 98, badge: "Most consistent" },
+  { week: 2, name: "Marim M.", points: 94 },
+  { week: 2, name: "Mohamed W.", points: 89 },
+  { week: 2, name: "Youssef S.", points: 87 },
   { week: 2, name: "Salma B.", points: 85, badge: "Best peer support" },
   { week: 2, name: "Omar K.", points: 80 },
   { week: 2, name: "Yasmin H.", points: 76 },

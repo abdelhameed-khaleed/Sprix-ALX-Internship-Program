@@ -69,6 +69,15 @@ export const resourceCategories: ResourceCategoryMeta[] = [
 
 export const resources: Resource[] = [
   {
+    id: "session-1-offline-photos",
+    title: "Session 1 offline photos & videos",
+    description: "Photos and videos from the Week 1 Friday offline session at the ALX Hub.",
+    category: "events",
+    week: 1,
+    url: "https://drive.google.com/drive/folders/1hrlnS6KqH9j85ursx45qCV3wplrAwRbT?usp=sharing",
+    image: "/media/events/session-1-offline.jpg",
+  },
+  {
     id: "week-1-walkthrough-recording",
     title: "Week 1 walkthrough recording",
     description: "Recording of the Week 1 Tuesday walkthrough session.",

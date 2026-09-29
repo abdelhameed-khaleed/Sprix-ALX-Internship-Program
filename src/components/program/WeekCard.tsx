@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {
   Brain,
   ChartColumn,
@@ -14,6 +15,7 @@ import type { Week, WeekIcon } from "@/content/program";
 import { formatWeekDate } from "@/lib/current-week";
 import { getWeekSessions } from "@/lib/sessions";
 import { Badge, IconTile, cx } from "@/components/ui";
+import { LinkedInIcon } from "./LinkedInIcon";
 import { SessionRow } from "./SessionRow";
 import styles from "./WeekCard.module.css";
 
@@ -26,6 +28,12 @@ const iconMap: Record<WeekIcon, typeof Brain> = {
   hammer: Hammer,
   trophy: Trophy,
 };
+
+function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
 
 export type WeekActivationKind = "click" | "hover";
 
@@ -155,6 +163,42 @@ export function WeekCard({
               <div className="flex flex-wrap items-baseline gap-2 pt-1">
                 <Badge tone="purple">Expert session</Badge>
                 <span className="font-medium text-navy">{week.expertSession}</span>
+              </div>
+            )}
+
+            {week.expertSpeaker && (
+              <div className="flex items-center gap-3 rounded-button border border-line/70 bg-surface-alt/60 px-3.5 py-2.5">
+                {week.expertSpeaker.photo ? (
+                  <div className="size-10 shrink-0 overflow-hidden rounded-full">
+                    <Image
+                      src={week.expertSpeaker.photo}
+                      alt={week.expertSpeaker.name}
+                      width={40}
+                      height={40}
+                      className="size-full object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div
+                    aria-hidden="true"
+                    className="flex size-10 shrink-0 items-center justify-center rounded-full bg-blue text-sm font-bold text-white"
+                  >
+                    {getInitials(week.expertSpeaker.name)}
+                  </div>
+                )}
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-semibold text-navy">{week.expertSpeaker.name}</p>
+                  <p className="text-xs text-muted">Guest speaker</p>
+                </div>
+                <a
+                  href={week.expertSpeaker.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="shrink-0 text-blue transition-colors hover:text-navy"
+                  aria-label={`${week.expertSpeaker.name} on LinkedIn (opens in a new tab)`}
+                >
+                  <LinkedInIcon className="size-5" />
+                </a>
               </div>
             )}
 

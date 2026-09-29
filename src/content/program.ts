@@ -2,6 +2,13 @@
 
 export type WeekIcon = "brain" | "chart" | "messages" | "users" | "compass" | "hammer" | "trophy";
 
+export type ExpertSpeaker = {
+  name: string;
+  linkedin: string;
+  /** Path under /public, e.g. "/speakers/aya-shawky.jpg". Initials avatar is used when omitted. */
+  photo?: string;
+};
+
 export type Week = {
   number: number;
   startDate: string;
@@ -10,6 +17,7 @@ export type Week = {
   summary: string;
   outcome: string;
   expertSession?: string;
+  expertSpeaker?: ExpertSpeaker;
   deliverable?: string;
   highlight?: string;
   icon: WeekIcon;
@@ -61,6 +69,7 @@ export const weeks: Week[] = [
     outcome:
       "Research real-world problems using empathy-driven methods and clearly frame opportunities through structured problem definition and data reasoning.",
     expertSession: "Presentation skills",
+    expertSpeaker: { name: "Aya Shawky", linkedin: "https://www.linkedin.com/in/aya-shawky55/" },
     deliverable: "Problem Research Brief",
     icon: "chart",
   },
@@ -73,6 +82,11 @@ export const weeks: Week[] = [
     outcome:
       "Communicate ideas clearly and persuasively through structured writing, storytelling, and professional documentation for team and stakeholder contexts.",
     expertSession: "Storytelling for impact & team communication",
+    expertSpeaker: {
+      name: "Aya El-Mahdy",
+      linkedin: "https://www.linkedin.com/in/aya-elmahdy/",
+      photo: "/speakers/aya-el-mahdy.jpg",
+    },
     deliverable: "Research Project: Problem Definition",
     icon: "messages",
   },
