@@ -78,6 +78,22 @@ export const resources: Resource[] = [
     image: "/media/events/session-1-offline.jpg",
   },
   {
+    id: "week-2-walkthrough-recording",
+    title: "Week 2 walkthrough recording",
+    description: "Recording of the Week 2 Tuesday walkthrough session.",
+    category: "walkthrough-recording",
+    week: 2,
+    url: "https://alxafrica.zoom.us/rec/share/5fSv7UAs051eWbHvXtpcMdKG8MegShVb48MXTyN7q0MtsvNJc8YiulTbrWkFrduz.TDe4NAanR602bsxM",
+  },
+  {
+    id: "week-2-session-slides",
+    title: "Week 2 session slides",
+    description: "Presentation deck used in the Week 2 walkthrough session.",
+    category: "slides",
+    week: 2,
+    url: "https://docs.google.com/presentation/d/1rNrktCdsiKT167cle5t9al3Ytq-5kFt6Dvc91b9vbB0/edit?usp=sharing",
+  },
+  {
     id: "week-1-walkthrough-recording",
     title: "Week 1 walkthrough recording",
     description: "Recording of the Week 1 Tuesday walkthrough session.",
