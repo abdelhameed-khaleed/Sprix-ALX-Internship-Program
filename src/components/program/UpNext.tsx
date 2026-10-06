@@ -79,9 +79,11 @@ export function UpNext({ initialNow }: { initialNow: string }) {
       liveLabel = session.state === "today" ? "Today" : "Upcoming";
       countdown = formatCountdown(now, new Date(session.datetime));
     }
-    action = session.url
-      ? { label: isOnline ? "Join on Zoom" : "Register to attend", href: session.url }
-      : { label: isOnline ? "Zoom link coming soon" : "Registration opens soon" };
+    action = !isOnline
+      ? { label: "" }
+      : session.url
+        ? { label: "Join on Zoom", href: session.url }
+        : { label: "Zoom link coming soon" };
     jumpHref = `#week-${session.weekNumber}`;
   } else {
     icon = <PartyPopper className="size-6 text-icy" aria-hidden="true" />;
@@ -119,7 +121,7 @@ export function UpNext({ initialNow }: { initialNow: string }) {
 
         {action && (
           <div className="flex shrink-0 flex-wrap items-center gap-3 sm:pl-4">
-            {action.href ? (
+            {!action.label ? null : action.href ? (
               <ButtonLink href={action.href} external variant="inverse">
                 {action.label}
               </ButtonLink>

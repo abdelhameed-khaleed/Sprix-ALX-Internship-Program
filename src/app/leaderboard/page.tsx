@@ -101,9 +101,6 @@ export default async function LeaderboardPage({ searchParams }: PageProps) {
                   <p className="min-w-0 flex-1 truncate text-lg font-bold text-navy" title={entry.name}>
                     {entry.name}
                   </p>
-                  <p className="text-2xl font-light text-navy">
-                    {entry.points} <span className="text-xs font-bold tracking-wider text-navy/70 uppercase">pts</span>
-                  </p>
                 </div>
               </Reveal>
             ))}

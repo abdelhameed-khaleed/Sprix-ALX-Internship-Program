@@ -48,10 +48,19 @@ export const learningModes: { title: string; detail: string; icon: LearningModeI
 export type CadenceIcon = "video" | "building" | "alarm";
 
 /** The fixed weekly rhythm, repeated every week of the program. */
-export const weeklyCadence: { day: string; time: string; title: string; where: string; icon: CadenceIcon }[] = [
-  { day: "Tuesday", time: "6:00 PM", title: "Online Walkthrough", where: "Zoom", icon: "video" },
-  { day: "Friday", time: "4:00 PM", title: "Offline Workshop", where: "ALX Hub", icon: "building" },
-  { day: "Monday", time: "11:59 PM", title: "LMS Submission Deadline", where: "Savanna", icon: "alarm" },
+export const weeklyCadence: {
+  day: string;
+  time: string;
+  /** Same moment as `time`, in 24h Cairo time, for countdowns. */
+  hour: number;
+  minute: number;
+  title: string;
+  where: string;
+  icon: CadenceIcon;
+}[] = [
+  { day: "Tuesday", time: "6:00 PM", hour: 18, minute: 0, title: "Online Walkthrough", where: "Zoom", icon: "video" },
+  { day: "Friday", time: "4:00 PM", hour: 16, minute: 0, title: "Offline Workshop", where: "ALX Hub", icon: "building" },
+  { day: "Monday", time: "11:59 PM", hour: 23, minute: 59, title: "LMS Submission Deadline", where: "Savanna", icon: "alarm" },
 ];
 
 export type RequirementIcon = "verified" | "users" | "presentation";

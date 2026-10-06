@@ -29,8 +29,6 @@ export type Week = {
   sessions?: {
     /** Tuesday 6:00 PM online walkthrough. */
     zoomUrl?: string;
-    /** Friday 4:00 PM offline workshop at the ALX Hub (registration is required every week). */
-    registrationUrl?: string;
     /** Set false when this week has no Tuesday online walkthrough. Defaults to true. */
     online?: boolean;
     /** Set false when this week has no Friday offline session. Defaults to true. */
@@ -87,7 +85,7 @@ export const weeks: Week[] = [
       linkedin: "https://www.linkedin.com/in/aya-elmahdy/",
       photo: "/speakers/aya-el-mahdy.jpg",
     },
-    deliverable: "Research Project: Problem Definition",
+    deliverable: "Communication Strategy Brief",
     icon: "messages",
   },
   {

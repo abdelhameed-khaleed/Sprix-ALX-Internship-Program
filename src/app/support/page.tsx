@@ -4,7 +4,6 @@ import {
   AlertCircle,
   Award,
   BookOpen,
-  Building2,
   CalendarDays,
   Clock,
   FileQuestion,
@@ -14,10 +13,9 @@ import {
   PlayCircle,
   Rocket,
   UploadCloud,
-  Video,
   Wrench,
 } from "lucide-react";
-import { ButtonLink, Card, IconTile, PageHero, Section } from "@/components/ui";
+import { ButtonLink, IconTile, PageHero, Section } from "@/components/ui";
 import {
   team,
   faqs,
@@ -26,9 +24,10 @@ import {
   type TechnicalIssueIcon,
   type ProgramQuestionIcon,
 } from "@/content/team";
-import { site, weeklyCadence } from "@/content/site";
+import { site } from "@/content/site";
 import { MemberCard } from "@/components/team/MemberCard";
 import { FaqList } from "@/components/team/FaqList";
+import { SupportPulse, WeeklyRhythmLive } from "@/components/team/SupportLive";
 import { WhatsAppIcon } from "@/components/team/WhatsAppIcon";
 import { Reveal } from "@/components/motion/Reveal";
 
@@ -56,17 +55,14 @@ const questionIconMap: Record<ProgramQuestionIcon, LucideIcon> = {
   chat: MessagesSquare,
 };
 
-const cadenceIconMap = {
-  video: Video,
-  building: Building2,
-  alarm: Clock,
-};
-
 const ticketChecklist = ["What you were doing", "The page link", "A screenshot", "Your Savanna email"];
+
+export const revalidate = 3600;
 
 export default function SupportPage() {
   const mainContact = team.find((member) => member.isMainContact) ?? team[0];
   const whatsappUrl = mainContact?.whatsapp;
+  const nowIso = new Date().toISOString();
 
   return (
     <>
@@ -76,6 +72,15 @@ export default function SupportPage() {
         intro="Have questions, need guidance, or running into a technical issue? We're here to support you every step of the way."
         pattern="/brand/patterns/Group-464.png"
       />
+
+      {/* Live schedule strip: Cairo clock, next session, next deadline */}
+      <div className="bg-surface px-4 pt-8 sm:px-6">
+        <div className="mx-auto max-w-[1200px]">
+          <Reveal variant="fade">
+            <SupportPulse initialNow={nowIso} />
+          </Reveal>
+        </div>
+      </div>
 
       {/* Two lanes: technical issues on the left, everything else on the right */}
       <Section
@@ -238,27 +243,8 @@ export default function SupportPage() {
               Repeated every week of the program, so most schedule questions are answered here:
             </p>
 
-            <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
-              {weeklyCadence.map((item, idx) => {
-                const CadenceIcon = cadenceIconMap[item.icon] ?? Clock;
-                return (
-                  <Card key={idx} className="lift flex items-start gap-3 bg-white p-4">
-                    <IconTile tone="blue">
-                      <CadenceIcon className="size-5 text-navy" aria-hidden="true" />
-                    </IconTile>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-xs font-bold tracking-wider text-muted uppercase">
-                        {item.day}
-                      </p>
-                      <h4 className="text-base font-bold text-navy">{item.title}</h4>
-                      <p className="text-xs font-medium text-ink">{item.time}</p>
-                      <span className="mt-1 inline-block rounded bg-surface-alt px-1.5 py-0.5 text-xs font-semibold text-muted">
-                        {item.where}
-                      </span>
-                    </div>
-                  </Card>
-                );
-              })}
+            <div className="mt-6">
+              <WeeklyRhythmLive initialNow={nowIso} />
             </div>
           </div>
         </Reveal>

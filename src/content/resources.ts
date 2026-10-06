@@ -68,14 +68,31 @@ export const resourceCategories: ResourceCategoryMeta[] = [
 ];
 
 export const resources: Resource[] = [
+  // Temporarily hidden: Session 1 photos & videos Drive link. Restore to show it again.
+  // {
+  //   id: "session-1-offline-photos",
+  //   title: "Session 1 offline photos & videos",
+  //   description: "Photos and videos from the Week 1 Friday offline session at the ALX Hub.",
+  //   category: "events",
+  //   week: 1,
+  //   url: "https://drive.google.com/drive/folders/1hrlnS6KqH9j85ursx45qCV3wplrAwRbT?usp=sharing",
+  //   image: "/media/events/session-1-offline.jpg",
+  // },
   {
-    id: "session-1-offline-photos",
-    title: "Session 1 offline photos & videos",
-    description: "Photos and videos from the Week 1 Friday offline session at the ALX Hub.",
-    category: "events",
-    week: 1,
-    url: "https://drive.google.com/drive/folders/1hrlnS6KqH9j85ursx45qCV3wplrAwRbT?usp=sharing",
-    image: "/media/events/session-1-offline.jpg",
+    id: "week-3-walkthrough-recording",
+    title: "Week 3 walkthrough recording",
+    description: "Recording of the Week 3 Tuesday walkthrough session.",
+    category: "walkthrough-recording",
+    week: 3,
+    url: "https://alxafrica.zoom.us/rec/share/c8hAt8UoW9-pBPu7j8vBvNHHpPZld_bD8T_ecVOLiYf0_Ypa8U6PSUqxQGoGKCWf.GJ07xXH4tSW2xc6G",
+  },
+  {
+    id: "week-3-session-slides",
+    title: "Week 3 session walkthrough slides",
+    description: "Presentation deck used in the Week 3 walkthrough session.",
+    category: "slides",
+    week: 3,
+    url: "https://docs.google.com/presentation/d/1zk4J0o3dVWS2gtTqCapl2EeFGBqAP1pMtLhwFXKYC4U/edit?usp=sharing",
   },
   {
     id: "week-2-walkthrough-recording",

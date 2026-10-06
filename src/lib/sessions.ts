@@ -4,7 +4,7 @@
 // both the server and the client without hydration surprises.
 
 import { defaultZoomUrl, weeks as allWeeks, type Week } from "@/content/program";
-import { site } from "@/content/site";
+import { site, weeklyCadence } from "@/content/site";
 import { toProgramDate } from "@/lib/current-week";
 
 export type SessionKind = "online" | "offline";
@@ -25,6 +25,29 @@ export type SessionInfo = {
   datetime: string;
   url?: string;
   state: SessionState;
+};
+
+export type DeadlineInfo = {
+  weekNumber: number;
+  /** Cairo calendar date, YYYY-MM-DD. */
+  date: string;
+  /** "Mon, 28 Sep" */
+  dateLabel: string;
+  /** "11:59 PM" */
+  time: string;
+  datetime: string;
+};
+
+/** One row of `weeklyCadence` resolved to the real next time it happens. */
+export type CadenceOccurrence = {
+  /** Index into `weeklyCadence`. */
+  index: number;
+  /** When this slot next happens, or undefined once the program has no more of them. */
+  at?: Date;
+  /** "Tue, 22 Sep" for that occurrence. */
+  dateLabel?: string;
+  /** The program week the occurrence belongs to. */
+  weekNumber?: number;
 };
 
 const SESSION_DURATION_MS = 2 * 60 * 60 * 1000;
@@ -142,7 +165,7 @@ function buildSession(
  * The Tuesday online walkthrough and Friday offline workshop for a given week.
  * Tuesday = week start + 2 days, 6:00 PM. Friday = week start + 5 days, 4:00 PM.
  * Falls back to `defaultZoomUrl` for the online session when the week has no zoomUrl of
- * its own; the offline registration link has no such fallback (registration is per-session).
+ * its own. The offline workshop has no link.
  * A week that sets `sessions.online` or `sessions.offline` to false has no session of that
  * kind at all, so it is left out here and never shows up in "up next" either.
  */
@@ -150,13 +173,12 @@ export function getWeekSessions(week: Week, now: Date = new Date(), timeZone: st
   const tuesday = addDays(week.startDate, 2);
   const friday = addDays(week.startDate, 5);
   const zoomUrl = week.sessions?.zoomUrl ?? defaultZoomUrl;
-  const registrationUrl = week.sessions?.registrationUrl;
   const sessions: SessionInfo[] = [];
   if (week.sessions?.online !== false) {
     sessions.push(buildSession(week, "online", tuesday, 18, 0, zoomUrl, now, timeZone));
   }
   if (week.sessions?.offline !== false) {
-    sessions.push(buildSession(week, "offline", friday, 16, 0, registrationUrl, now, timeZone));
+    sessions.push(buildSession(week, "offline", friday, 16, 0, undefined, now, timeZone));
   }
   return sessions;
 }
@@ -174,11 +196,84 @@ export function getNextSession(
   return candidates[0];
 }
 
+/** Full weekday name to its Sun=0 .. Sat=6 index, for the `weeklyCadence` day strings. */
+export const WEEKDAY_INDEX: Record<string, number> = {
+  Sunday: 0,
+  Monday: 1,
+  Tuesday: 2,
+  Wednesday: 3,
+  Thursday: 4,
+  Friday: 5,
+  Saturday: 6,
+};
+
 /** 0 = Sunday .. 6 = Saturday, for `now`'s calendar date in `timeZone`. */
 export function getCairoWeekdayIndex(now: Date = new Date(), timeZone: string = site.timezone): number {
   const short = new Intl.DateTimeFormat("en-US", { timeZone, weekday: "short" }).format(now);
   const idx = WEEKDAY_SHORT.indexOf(short);
   return idx === -1 ? 0 : idx;
+}
+
+/**
+ * A week's submission deadline: the cadence deadline day in the week *after* that week's
+ * Sun-Sat span. Week 1 starts Sun 20 Sep, so its Monday deadline is Mon 28 Sep, not the
+ * Monday that falls inside week 1 itself.
+ */
+export function getWeekDeadline(week: Week, timeZone: string = site.timezone): DeadlineInfo | undefined {
+  const cadence = weeklyCadence.find((item) => item.icon === "alarm");
+  if (!cadence) return undefined;
+  const offset = 7 + (WEEKDAY_INDEX[cadence.day] ?? 0);
+  const date = addDays(week.startDate, offset);
+  return {
+    weekNumber: week.number,
+    date,
+    dateLabel: formatDateLabel(date),
+    time: cadence.time,
+    datetime: formatIsoWithOffset(date, cadence.hour, cadence.minute, timeZone),
+  };
+}
+
+/** The next submission deadline that has not passed yet, across every week. */
+export function getNextDeadline(
+  now: Date = new Date(),
+  programWeeks: Week[] = allWeeks,
+  timeZone: string = site.timezone,
+): DeadlineInfo | undefined {
+  return programWeeks
+    .map((week) => getWeekDeadline(week, timeZone))
+    .filter((deadline): deadline is DeadlineInfo => deadline !== undefined)
+    .sort((a, b) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime())
+    .find((deadline) => new Date(deadline.datetime).getTime() > now.getTime());
+}
+
+/**
+ * Each `weeklyCadence` row resolved against the real schedule: the next Tuesday
+ * walkthrough, the next Friday workshop and the next submission deadline. Weeks that
+ * switch a session off are skipped, so a cadence row can legitimately run out.
+ */
+export function getUpcomingCadence(
+  now: Date = new Date(),
+  programWeeks: Week[] = allWeeks,
+  timeZone: string = site.timezone,
+): CadenceOccurrence[] {
+  const upcomingSessions = programWeeks
+    .flatMap((week) => getWeekSessions(week, now, timeZone))
+    .filter((session) => session.state !== "past")
+    .sort((a, b) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime());
+
+  return weeklyCadence.map((item, index) => {
+    if (item.icon === "alarm") {
+      const deadline = getNextDeadline(now, programWeeks, timeZone);
+      return deadline
+        ? { index, at: new Date(deadline.datetime), dateLabel: deadline.dateLabel, weekNumber: deadline.weekNumber }
+        : { index };
+    }
+    const kind: SessionKind = item.icon === "video" ? "online" : "offline";
+    const session = upcomingSessions.find((candidate) => candidate.kind === kind);
+    return session
+      ? { index, at: new Date(session.datetime), dateLabel: session.dateLabel, weekNumber: session.weekNumber }
+      : { index };
+  });
 }
 
 /** Fraction (0..1) of the way through the current Sun→Sat calendar week, in `timeZone`. */

@@ -4,8 +4,8 @@ import { PageHero, Section, Card, IconTile, ButtonLink, cx } from "@/components/
 import { CompletionRequirements } from "@/components/sections/CompletionRequirements";
 import { site, weeklyCadence } from "@/content/site";
 import { weeks } from "@/content/program";
-import { getProgramStatus } from "@/lib/current-week";
-import { getCairoWeekdayIndex, getWeekProgress } from "@/lib/sessions";
+import { getProgramStatus, toProgramDate } from "@/lib/current-week";
+import { getUpcomingCadence, getWeekProgress } from "@/lib/sessions";
 import { WeekTimeline } from "@/components/program/WeekTimeline";
 import { UpNext } from "@/components/program/UpNext";
 import { ProgramProgress } from "@/components/program/ProgramProgress";
@@ -25,17 +25,6 @@ const cadenceIconMap = {
   alarm: Clock,
 };
 
-/** Sun=0 .. Sat=6 weekday index for each cadence item's day name. */
-const CADENCE_DAY_INDEX: Record<string, number> = {
-  Sunday: 0,
-  Monday: 1,
-  Tuesday: 2,
-  Wednesday: 3,
-  Thursday: 4,
-  Friday: 5,
-  Saturday: 6,
-};
-
 export default function ProgramPage() {
   const now = new Date();
   const status = getProgramStatus(now);
@@ -50,11 +39,15 @@ export default function ProgramPage() {
         ? `Week ${status.week.number} of ${site.totalWeeks}`
         : `${site.totalWeeks}-week program`;
 
-  // Weekly rhythm: highlight whichever cadence item (Tue walkthrough / Fri workshop / Sun
-  // deadline) is soonest from today, wrapping forward through the Sunâ†’Sat week.
-  const todayIndex = getCairoWeekdayIndex(now);
-  const cadenceDistance = (day: string) => (((CADENCE_DAY_INDEX[day] ?? 0) - todayIndex + 7) % 7);
-  const nearestDistance = Math.min(...weeklyCadence.map((c) => cadenceDistance(c.day)));
+  // Weekly rhythm: resolve each slot against the real schedule (skipping weeks that have no
+  // session, and putting each week's deadline in the week that follows it), then highlight
+  // whichever one actually comes next.
+  const today = toProgramDate(now);
+  const occurrences = getUpcomingCadence(now);
+  const pendingTimes = occurrences
+    .map((occurrence) => occurrence.at?.getTime())
+    .filter((time): time is number => time !== undefined);
+  const soonest = pendingTimes.length > 0 ? Math.min(...pendingTimes) : undefined;
   const weekProgress = getWeekProgress(now);
 
   return (
@@ -92,9 +85,9 @@ export default function ProgramPage() {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {weeklyCadence.map((cadence, idx) => {
             const CadenceIcon = cadenceIconMap[cadence.icon] ?? Clock;
-            const distance = cadenceDistance(cadence.day);
-            const isToday = distance === 0;
-            const isHighlighted = distance === nearestDistance;
+            const occurrence = occurrences[idx];
+            const isToday = occurrence?.at ? toProgramDate(occurrence.at) === today : false;
+            const isHighlighted = occurrence?.at !== undefined && occurrence.at.getTime() === soonest;
 
             return (
               <Reveal key={idx} delay={idx * 80}>
@@ -122,7 +115,9 @@ export default function ProgramPage() {
                       </div>
                     </div>
                     <h3 className="mt-1 text-lg font-bold text-navy">{cadence.title}</h3>
-                    <p className="mt-1 text-sm font-medium text-ink">{cadence.time}</p>
+                    <p className="mt-1 text-sm font-medium text-ink">
+                      {occurrence?.dateLabel ? `${occurrence.dateLabel} · ${cadence.time}` : cadence.time}
+                    </p>
                   </div>
                 </Card>
               </Reveal>

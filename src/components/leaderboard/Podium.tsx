@@ -4,7 +4,6 @@ import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } fr
 import { Award, Medal, Trophy } from "lucide-react";
 import type { Standing } from "@/lib/leaderboard";
 import { cx } from "@/components/ui";
-import { PointsCounter } from "./PointsCounter";
 import styles from "./fire.module.css";
 
 type PodiumProps = {
@@ -22,7 +21,6 @@ type RankConfig = {
   /** Card size: 1st is the biggest box, then 2nd, then 3rd. */
   sizeClass: string;
   nameTextClass: string;
-  pointsTextClass: string;
   iconTileClass: string;
   auraClass: string;
 };
@@ -35,8 +33,7 @@ const rankConfigs: RankConfig[] = [
     cardClass: "bg-jasmine border-sun/50 shadow-e3",
     stepClass: "md:h-40 bg-navy",
     sizeClass: "min-h-80 p-8 md:min-h-[26rem]",
-    nameTextClass: "text-2xl sm:text-3xl",
-    pointsTextClass: "text-6xl sm:text-7xl",
+    nameTextClass: "text-3xl sm:text-4xl",
     iconTileClass: "bg-sun/40 text-navy size-12",
     auraClass: styles.fireAura,
   },
@@ -47,8 +44,7 @@ const rankConfigs: RankConfig[] = [
     cardClass: "bg-icy border-line shadow-e2",
     stepClass: "md:h-28 bg-blue",
     sizeClass: "min-h-64 p-6 md:min-h-[21rem]",
-    nameTextClass: "text-xl sm:text-2xl",
-    pointsTextClass: "text-5xl sm:text-6xl",
+    nameTextClass: "text-2xl sm:text-3xl",
     iconTileClass: "bg-sky text-navy size-11",
     auraClass: styles.icyAura,
   },
@@ -59,8 +55,7 @@ const rankConfigs: RankConfig[] = [
     cardClass: "bg-lavender border-line shadow-e1",
     stepClass: "md:h-16 bg-purple",
     sizeClass: "min-h-52 p-5 md:min-h-[17rem]",
-    nameTextClass: "text-lg sm:text-xl",
-    pointsTextClass: "text-4xl sm:text-5xl",
+    nameTextClass: "text-xl sm:text-2xl",
     iconTileClass: "bg-purple/20 text-navy size-11",
     auraClass: styles.lavenderAura,
   },
@@ -143,10 +138,6 @@ function PodiumTile({ config, learners, delayMs, inView }: { config: RankConfig;
               <h3 className={cx("truncate font-bold text-navy", config.nameTextClass)} title={learner.name}>
                 {learner.name}
               </h3>
-              <div className="mt-2 flex items-baseline gap-1.5">
-                <PointsCounter value={learner.points} play={inView} className={cx("font-light tracking-tight text-navy", config.pointsTextClass)} />
-                <span className="text-xs font-bold tracking-wider text-navy/70 uppercase">pts</span>
-              </div>
               {learner.badge && (
                 <span className="mt-2 inline-flex rounded-full bg-navy/10 px-3 py-1 text-xs font-semibold text-navy">{learner.badge}</span>
               )}

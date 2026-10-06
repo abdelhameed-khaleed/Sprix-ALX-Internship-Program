@@ -126,8 +126,7 @@ export const team: TeamMember[] = [
       "Partnership and program-level questions",
     ],
     photo: "/team/aalaa.jpg",
-    // TODO: add Aalaa's work email here to show the "Send an email" button.
-    email: undefined,
+    email: "aosman@alxafrica.com",
   },
 ];
 
