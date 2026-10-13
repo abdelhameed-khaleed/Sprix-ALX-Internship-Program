@@ -50,8 +50,13 @@ export function RankTable({ entries, weekNumber }: RankTableProps) {
                 </span>
               </td>
               <td className="px-5 py-4 font-semibold text-navy">
-                {entry.points}{" "}
-                <span className="text-xs font-normal text-muted">pts</span>
+                {entry.points === undefined ? (
+                  <span className="text-muted">-</span>
+                ) : (
+                  <>
+                    {entry.points} <span className="text-xs font-normal text-muted">pts</span>
+                  </>
+                )}
               </td>
               <td className="px-5 py-4">
                 {entry.badge ? (

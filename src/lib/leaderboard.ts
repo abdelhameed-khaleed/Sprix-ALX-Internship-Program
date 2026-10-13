@@ -12,9 +12,10 @@ export const WEEKLY_TOP_N = 3;
 export const OVERALL_TOP_N = 5;
 const MAX_NAME_LENGTH = 40;
 
-export type LeaderboardEntry = { week: number; name: string; points: number; badge?: string };
+/** `points` is optional: a week listed without scores is ranked in the order given and left out of the overall totals. */
+export type LeaderboardEntry = { week: number; name: string; points?: number; badge?: string };
 /** One ranked learner, weekly or overall. Ties share a rank. */
-export type Standing = { name: string; points: number; rank: number; badge?: string };
+export type Standing = { name: string; points?: number; rank: number; badge?: string };
 export type RankedEntry = LeaderboardEntry & { rank: number };
 
 export type Leaderboard =
@@ -71,13 +72,18 @@ function denseRank<T extends { name: string; points: number }>(items: T[], topN:
 }
 
 export function rankWeek(entries: LeaderboardEntry[], topN: number = WEEKLY_TOP_N): RankedEntry[] {
-  return denseRank(entries, topN);
+  if (entries.some((e) => e.points === undefined)) {
+    return entries.slice(0, topN).map((e, i) => ({ ...e, rank: i + 1 }));
+  }
+  return denseRank(entries as (LeaderboardEntry & { points: number })[], topN);
 }
 
 /** Sum each learner's points across all weeks, then rank the top N. */
 export function rankOverall(entries: LeaderboardEntry[], topN: number = OVERALL_TOP_N): Standing[] {
   const totals = new Map<string, number>();
-  for (const e of entries) totals.set(e.name, (totals.get(e.name) ?? 0) + e.points);
+  for (const e of entries) {
+    if (e.points !== undefined) totals.set(e.name, (totals.get(e.name) ?? 0) + e.points);
+  }
   return denseRank(
     [...totals].map(([name, points]) => ({ name, points })),
     topN,

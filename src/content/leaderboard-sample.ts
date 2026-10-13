@@ -2,7 +2,7 @@ import type { LeaderboardEntry } from "@/lib/leaderboard";
 
 // Sample leaderboard data shown until LEADERBOARD_CSV_URL is configured with a real
 // published Google Sheet. Display names default to first name + last initial, matching
-// the constitution's privacy rule for learner data. The Week 1 top 3 use full names at
+// the constitution's privacy rule for learner data. The Week 1 and Week 3 top 3 use full names at
 // the program owner's explicit request.
 
 export const sampleLeaderboardEntries: LeaderboardEntry[] = [
@@ -15,4 +15,9 @@ export const sampleLeaderboardEntries: LeaderboardEntry[] = [
   { week: 1, name: "Nourhan G.", points: 77 },
   { week: 1, name: "Karim E.", points: 74 },
   { week: 1, name: "Laila F.", points: 69 },
+
+  // Week 3: top 3 published without scores, listed in rank order
+  { week: 3, name: "Jana Hossam Al-Din" },
+  { week: 3, name: "Marim Mostafa" },
+  { week: 3, name: "Maryam Nashaat" },
 ];
