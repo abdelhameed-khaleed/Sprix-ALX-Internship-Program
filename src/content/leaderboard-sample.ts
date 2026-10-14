@@ -5,6 +5,15 @@ import type { LeaderboardEntry } from "@/lib/leaderboard";
 // the constitution's privacy rule for learner data. The Week 1 and Week 3 top 3 use full names at
 // the program owner's explicit request.
 
+/** Overall top 5 so far, in rank order, published without scores at the program owner's request. */
+export const overallTopNames: string[] = [
+  "Jana Hossam Al-Din",
+  "Marim Mostafa",
+  "Maryam Nashaat",
+  "Mohamed Waleed",
+  "Shahd Mohamed",
+];
+
 export const sampleLeaderboardEntries: LeaderboardEntry[] = [
   // Week 1
   { week: 1, name: "Maryam Nashaat", points: 96, badge: "Most consistent" },

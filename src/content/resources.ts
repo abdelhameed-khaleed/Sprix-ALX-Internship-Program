@@ -1,10 +1,9 @@
 // Learner resources shown on /resources. Add new items to the top of the list.
-// week: 1–7 for a specific week, or "general" for program-wide resources.
+// week: 1–5 for a specific week, or "general" for program-wide resources.
 
 export type ResourceCategory =
   | "walkthrough-recording"
   | "slides"
-  | "friday-session"
   | "events"
   | "other";
 
@@ -48,12 +47,6 @@ export const resourceCategories: ResourceCategoryMeta[] = [
     emptyMessage: "Slides are added once the related session has run.",
   },
   {
-    key: "friday-session",
-    label: "Friday session resources",
-    description: "Materials from the Friday 4:00 PM offline workshop at the ALX Hub.",
-    emptyMessage: "Friday session resources are added after each offline workshop.",
-  },
-  {
     key: "events",
     label: "Events",
     description: "Photos from the workshops, sessions and program events.",
@@ -67,6 +60,9 @@ export const resourceCategories: ResourceCategoryMeta[] = [
   },
 ];
 
+/** Weeks that have content and sessions; drives the week filter chips on /resources. */
+export const resourceWeekCount = 5;
+
 export const resources: Resource[] = [
   // Temporarily hidden: Session 1 photos & videos Drive link. Restore to show it again.
   // {
@@ -78,6 +74,30 @@ export const resources: Resource[] = [
   //   url: "https://drive.google.com/drive/folders/1hrlnS6KqH9j85ursx45qCV3wplrAwRbT?usp=sharing",
   //   image: "/media/events/session-1-offline.jpg",
   // },
+  {
+    id: "week-4-walkthrough-recording",
+    title: "Week 4 walkthrough recording",
+    description: "Recording of the Week 4 Tuesday walkthrough session.",
+    category: "walkthrough-recording",
+    week: 4,
+    url: "https://alxafrica.zoom.us/rec/share/Oh--lgMeKylMMx9miQErOBy_mOHHOHyF3STH3s9AHuNQ-_K4XXMTvYfgDl9mrwpA.xLf-irC_R_8JXAtt",
+  },
+  {
+    id: "week-4-session-slides",
+    title: "Week 4 session walkthrough slides",
+    description: "Presentation deck used in the Week 4 walkthrough session.",
+    category: "slides",
+    week: 4,
+    url: "https://docs.google.com/presentation/d/10OLHjODCbSVEE9aZwzMXtKOCzUgBckltnrzkhDooPFU/edit?slide=id.p1#slide=id.p1",
+  },
+  {
+    id: "week-3-offline-session-slides",
+    title: "Week 3 offline session slides",
+    description: "Presentation deck from the Week 3 offline workshop, held by Aya El-Mahdy.",
+    category: "slides",
+    week: 3,
+    url: "https://canva.link/203t4bwhcfbxi",
+  },
   {
     id: "week-3-walkthrough-recording",
     title: "Week 3 walkthrough recording",

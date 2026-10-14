@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { resourceCategories } from "@/content/resources";
-import { site } from "@/content/site";
+import { resourceCategories, resourceWeekCount } from "@/content/resources";
 import { cx } from "@/components/ui";
 
 type ResourceFiltersProps = {
@@ -27,7 +26,7 @@ export function ResourceFilters({ activeWeek, activeCategory }: ResourceFiltersP
   const weekOptions = [
     { key: "all", label: "All" },
     { key: "general", label: "General" },
-    ...Array.from({ length: site.totalWeeks }, (_, i) => {
+    ...Array.from({ length: resourceWeekCount }, (_, i) => {
       const num = i + 1;
       return { key: String(num), label: `Week ${num}` };
     }),

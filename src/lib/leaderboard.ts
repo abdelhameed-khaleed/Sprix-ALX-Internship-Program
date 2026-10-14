@@ -1,6 +1,6 @@
 import Papa from "papaparse";
 import { site } from "@/content/site";
-import { sampleLeaderboardEntries } from "@/content/leaderboard-sample";
+import { overallTopNames, sampleLeaderboardEntries } from "@/content/leaderboard-sample";
 
 // Leaderboard source: a Google Sheet published as CSV (File → Share → Publish to web → CSV)
 // with the header row: week, name, points, badge
@@ -90,16 +90,20 @@ export function rankOverall(entries: LeaderboardEntry[], topN: number = OVERALL_
   );
 }
 
-export function buildLeaderboard(entries: LeaderboardEntry[]): Leaderboard {
+/** `overallOrder` lists the overall top names in rank order, overriding the points-based totals. */
+export function buildLeaderboard(entries: LeaderboardEntry[], overallOrder?: string[]): Leaderboard {
   if (entries.length === 0) return { status: "unavailable" };
   const weeks = [...new Set(entries.map((e) => e.week))].sort((a, b) => a - b);
   const byWeek: Record<number, RankedEntry[]> = {};
   for (const week of weeks) byWeek[week] = rankWeek(entries.filter((e) => e.week === week));
-  return { status: "ok", weeks, byWeek, overall: rankOverall(entries) };
+  const overall = overallOrder
+    ? overallOrder.slice(0, OVERALL_TOP_N).map((name, i) => ({ name, rank: i + 1 }))
+    : rankOverall(entries);
+  return { status: "ok", weeks, byWeek, overall };
 }
 
 export function getSampleLeaderboard(): Leaderboard {
-  const board = buildLeaderboard(sampleLeaderboardEntries);
+  const board = buildLeaderboard(sampleLeaderboardEntries, overallTopNames);
   return board.status === "ok" ? { ...board, isSample: true } : board;
 }
 

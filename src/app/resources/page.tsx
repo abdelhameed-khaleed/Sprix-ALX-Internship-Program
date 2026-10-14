@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Camera, FolderOpen, Landmark, Presentation, Video } from "lucide-react";
+import { Camera, FolderOpen, Presentation, Video } from "lucide-react";
 import { EmptyState, IconTile, PageHero, Section } from "@/components/ui";
 import { resources, resourceCategories, type ResourceCategory } from "@/content/resources";
 import { ResourceCard } from "@/components/resources/ResourceCard";
@@ -9,13 +9,12 @@ import { Reveal } from "@/components/motion/Reveal";
 export const metadata: Metadata = {
   title: "Resources",
   description:
-    "Access walkthrough recordings, slides, Friday session materials and other resources for the ALX × SPRIX Professional Skills Program.",
+    "Access walkthrough recordings, slides and other resources for the ALX × SPRIX Professional Skills Program.",
 };
 
 const categoryIconMap: Record<ResourceCategory, typeof Video> = {
   "walkthrough-recording": Video,
   slides: Presentation,
-  "friday-session": Landmark,
   events: Camera,
   other: FolderOpen,
 };
@@ -52,7 +51,7 @@ export default async function ResourcesPage({ searchParams }: PageProps) {
       <PageHero
         eyebrow="Resources"
         title="Everything you need, in one place"
-        intro="Walkthrough recordings, slides, Friday session materials, event photos and official program links, organised by category and week."
+        intro="Walkthrough recordings, slides, event photos and official program links, organised by category and week."
         pattern="/brand/patterns/Group-460.png"
       />
 

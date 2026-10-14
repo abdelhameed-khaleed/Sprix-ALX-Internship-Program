@@ -1,12 +1,11 @@
 import Image from "next/image";
-import { Camera, FolderOpen, Info, Landmark, Presentation, Video } from "lucide-react";
+import { Camera, FolderOpen, Info, Presentation, Video } from "lucide-react";
 import type { Resource, ResourceCategory } from "@/content/resources";
 import { Badge, ButtonLink, Card, IconTile } from "@/components/ui";
 
 const categoryIconMap: Record<ResourceCategory, typeof Video> = {
   "walkthrough-recording": Video,
   slides: Presentation,
-  "friday-session": Landmark,
   events: Camera,
   other: FolderOpen,
 };
