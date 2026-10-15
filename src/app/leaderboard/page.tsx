@@ -13,10 +13,6 @@ export const metadata: Metadata = {
   description: "Weekly top 3 and overall top 5 standings for the ALX × SPRIX Professional Skills Program.",
 };
 
-type PageProps = {
-  searchParams: Promise<{ week?: string }>;
-};
-
 const HERO = {
   eyebrow: "Leaderboard",
   title: "Top performers",
@@ -24,9 +20,8 @@ const HERO = {
   pattern: "/brand/patterns/Group-462.png",
 };
 
-export default async function LeaderboardPage({ searchParams }: PageProps) {
+export default async function LeaderboardPage() {
   const board = await getLeaderboard();
-  const params = await searchParams;
 
   if (board.status === "unavailable" || board.weeks.length === 0) {
     return (
@@ -48,8 +43,6 @@ export default async function LeaderboardPage({ searchParams }: PageProps) {
     );
   }
 
-  const requestedWeek = params?.week ? Number(params.week) : undefined;
-  const selectedWeek = requestedWeek && board.weeks.includes(requestedWeek) ? requestedWeek : board.weeks[board.weeks.length - 1];
   const overallRunnersUp = board.overall.filter((e) => e.rank > 3);
   const lastWeek = board.weeks[board.weeks.length - 1];
 
@@ -68,15 +61,15 @@ export default async function LeaderboardPage({ searchParams }: PageProps) {
         </div>
       )}
 
-      {/* Weekly standings: top 3 of the selected week */}
+      {/* Weekly standings: top 3 of the current week */}
       <Section
         id="weekly-standings"
         tone="white"
         eyebrow={`Weekly standings · Top ${WEEKLY_TOP_N}`}
         title="Weekly top performers"
-        intro="The three learners with the most points each week."
+        intro="The three learners with the most points this week."
       >
-        <WeeklyStandings weeks={board.weeks} byWeek={board.byWeek} initialWeek={selectedWeek} />
+        <WeeklyStandings week={lastWeek} entries={board.byWeek[lastWeek] ?? []} />
       </Section>
 
       {/* Overall standings: top 5 by total points across all weeks */}
