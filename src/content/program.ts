@@ -18,6 +18,8 @@ export type Week = {
   outcome: string;
   expertSession?: string;
   expertSpeaker?: ExpertSpeaker;
+  /** Use instead of `expertSpeaker` when a week has several guest speakers. */
+  expertSpeakers?: ExpertSpeaker[];
   deliverable?: string;
   highlight?: string;
   icon: WeekIcon;
@@ -114,6 +116,28 @@ export const weeks: Week[] = [
     outcome:
       "Explore technology-enabled career pathways and articulate a clear professional narrative aligned with personal strengths, values, and market opportunities.",
     expertSession: "Career coaching",
+    expertSpeakers: [
+      {
+        name: "Omar Moneer",
+        linkedin: "https://www.linkedin.com/in/omarmoneer/",
+        photo: "/speakers/omar-moneer.jpg",
+      },
+      {
+        name: "Ahmed Mattar",
+        linkedin: "https://www.linkedin.com/in/ahmed-mattar-a75b1b202/",
+        photo: "/speakers/ahmed-mattar.jpg",
+      },
+      {
+        name: "Manar Abotaleb",
+        linkedin: "https://www.linkedin.com/in/manarabotaleb/",
+        photo: "/speakers/manar-abotaleb.jpg",
+      },
+      {
+        name: "Aya Hassan",
+        linkedin: "https://www.linkedin.com/in/aya-hassan-190988162/",
+        photo: "/speakers/aya-hassan.jpg",
+      },
+    ],
     icon: "compass",
   },
   {

@@ -59,6 +59,7 @@ export function WeekCard({
   const triggerId = `week-trigger-${week.number}`;
   const panelId = `week-panel-${week.number}`;
   const sessions = getWeekSessions(week, now);
+  const speakers = week.expertSpeakers ?? (week.expertSpeaker ? [week.expertSpeaker] : []);
 
   return (
     <article
@@ -166,13 +167,13 @@ export function WeekCard({
               </div>
             )}
 
-            {week.expertSpeaker && (
-              <div className="flex items-center gap-3 rounded-button border border-line/70 bg-surface-alt/60 px-3.5 py-2.5">
-                {week.expertSpeaker.photo ? (
+            {speakers.map((speaker) => (
+              <div key={speaker.name} className="flex items-center gap-3 rounded-button border border-line/70 bg-surface-alt/60 px-3.5 py-2.5">
+                {speaker.photo ? (
                   <div className="size-10 shrink-0 overflow-hidden rounded-full">
                     <Image
-                      src={week.expertSpeaker.photo}
-                      alt={week.expertSpeaker.name}
+                      src={speaker.photo}
+                      alt={speaker.name}
                       width={40}
                       height={40}
                       className="size-full object-cover"
@@ -183,24 +184,24 @@ export function WeekCard({
                     aria-hidden="true"
                     className="flex size-10 shrink-0 items-center justify-center rounded-full bg-blue text-sm font-bold text-white"
                   >
-                    {getInitials(week.expertSpeaker.name)}
+                    {getInitials(speaker.name)}
                   </div>
                 )}
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-semibold text-navy">{week.expertSpeaker.name}</p>
+                  <p className="text-sm font-semibold text-navy">{speaker.name}</p>
                   <p className="text-xs text-muted">Guest speaker</p>
                 </div>
                 <a
-                  href={week.expertSpeaker.linkedin}
+                  href={speaker.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="shrink-0 text-blue transition-colors hover:text-navy"
-                  aria-label={`${week.expertSpeaker.name} on LinkedIn (opens in a new tab)`}
+                  aria-label={`${speaker.name} on LinkedIn (opens in a new tab)`}
                 >
                   <LinkedInIcon className="size-5" />
                 </a>
               </div>
-            )}
+            ))}
 
             {week.deliverable && (
               <div className="flex flex-wrap items-baseline gap-2 pt-1">
