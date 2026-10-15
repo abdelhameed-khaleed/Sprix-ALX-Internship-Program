@@ -1,5 +1,6 @@
 import { Hero } from "@/components/home/Hero";
 import { HomeScrollMode } from "@/components/home/HomeScrollMode";
+import { SpeakerAnnouncement } from "@/components/home/SpeakerAnnouncement";
 import { SpecialSauce } from "@/components/home/SpecialSauce";
 import { HowYouLearn } from "@/components/home/HowYouLearn";
 import { WeeklyRhythm } from "@/components/home/WeeklyRhythm";
@@ -38,6 +39,7 @@ export default async function HomePage() {
     <>
       <HomeScrollMode />
       <Hero statusLabel={statusLabel} />
+      <SpeakerAnnouncement />
       <SpecialSauce />
       <HowYouLearn />
       <WeeklyRhythm />

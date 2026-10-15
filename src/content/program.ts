@@ -97,6 +97,11 @@ export const weeks: Week[] = [
     outcome:
       "Collaborate effectively within professional teams by applying Agile principles, emotional intelligence, and collaborative problem-solving techniques.",
     expertSession: "Agile ways of working & problem-solving",
+    expertSpeaker: {
+      name: "Aya Hassan",
+      linkedin: "https://www.linkedin.com/in/aya-hassan-190988162/",
+      photo: "/speakers/aya-hassan.jpg",
+    },
     deliverable: "Teamwork Portfolio",
     icon: "users",
   },
