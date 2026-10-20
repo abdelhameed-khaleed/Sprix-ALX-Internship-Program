@@ -4,6 +4,8 @@ import { ButtonLink, Card, EmptyState, PageHero, Section } from "@/components/ui
 import { getLeaderboard, OVERALL_TOP_N, WEEKLY_TOP_N } from "@/lib/leaderboard";
 import { WeeklyStandings } from "@/components/leaderboard/WeeklyStandings";
 import { Podium } from "@/components/leaderboard/Podium";
+import { LearnerOfTheWeek } from "@/components/leaderboard/LearnerOfTheWeek";
+import { learnerOfTheWeek } from "@/content/leaderboard-sample";
 import { Reveal } from "@/components/motion/Reveal";
 
 export const revalidate = 900;
@@ -70,6 +72,10 @@ export default async function LeaderboardPage() {
         intro="The three learners with the most points this week."
       >
         <WeeklyStandings week={lastWeek} entries={board.byWeek[lastWeek] ?? []} />
+
+        <Reveal variant="up" className="mt-12">
+          <LearnerOfTheWeek week={learnerOfTheWeek.week} name={learnerOfTheWeek.name} />
+        </Reveal>
       </Section>
 
       {/* Overall standings: top 5 by total points across all weeks */}

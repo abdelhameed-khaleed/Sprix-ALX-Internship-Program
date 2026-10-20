@@ -8,11 +8,14 @@ import type { LeaderboardEntry } from "@/lib/leaderboard";
 /** Overall top 5 so far, in rank order, published without scores at the program owner's request. */
 export const overallTopNames: string[] = [
   "Jana Hossam Al-Din",
-  "Marim Mostafa",
-  "Maryam Nashaat",
   "Mohamed Waleed",
+  "Marim Mostafa",
   "Shahd Mohamed",
+  "Maryam Nashaat",
 ];
+
+/** Learner of the week: the biggest progress over the last week, highlighted at the program owner's request. */
+export const learnerOfTheWeek = { week: 4, name: "Khalid Islam" };
 
 export const sampleLeaderboardEntries: LeaderboardEntry[] = [
   // Week 1
@@ -29,4 +32,9 @@ export const sampleLeaderboardEntries: LeaderboardEntry[] = [
   { week: 3, name: "Jana Hossam Al-Din" },
   { week: 3, name: "Marim Mostafa" },
   { week: 3, name: "Maryam Nashaat" },
+
+  // Week 4: top 3 published without scores, listed in rank order
+  { week: 4, name: "Jana Hossam Al-Din" },
+  { week: 4, name: "Mohamed Waleed" },
+  { week: 4, name: "Marim Mostafa" },
 ];
