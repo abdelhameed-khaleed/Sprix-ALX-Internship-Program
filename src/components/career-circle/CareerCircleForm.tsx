@@ -29,7 +29,7 @@ export function CareerCircleForm() {
       email: String(data.get("email") ?? ""),
       whatsapp: String(data.get("whatsapp") ?? ""),
       preferences,
-      otherCareers: [String(data.get("otherCareer1") ?? ""), String(data.get("otherCareer2") ?? "")],
+      otherCareers: [String(data.get("otherCareer") ?? "")],
     };
 
     const problem = validateSubmission(submission);
@@ -134,26 +134,16 @@ export function CareerCircleForm() {
       <fieldset className="mt-6">
         <legend className="text-sm font-semibold text-navy">
           If your preference does not exist in the current careers, what would you choose?{" "}
-          <span className="font-normal text-muted">(optional, up to two)</span>
+          <span className="font-normal text-muted">(optional)</span>
         </legend>
-        <div className="mt-2.5 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <input
-            name="otherCareer1"
-            type="text"
-            maxLength={100}
-            aria-label="Other career 1"
-            placeholder="e.g. Cybersecurity"
-            className={cx(inputClass, "mt-0")}
-          />
-          <input
-            name="otherCareer2"
-            type="text"
-            maxLength={100}
-            aria-label="Other career 2"
-            placeholder="e.g. Graphic Design"
-            className={cx(inputClass, "mt-0")}
-          />
-        </div>
+        <input
+          name="otherCareer"
+          type="text"
+          maxLength={100}
+          aria-label="Other career"
+          placeholder="e.g. Cybersecurity, Graphic Design"
+          className={inputClass}
+        />
       </fieldset>
 
       {error && (
