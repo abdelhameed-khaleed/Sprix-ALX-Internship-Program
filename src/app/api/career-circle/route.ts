@@ -34,9 +34,15 @@ export async function POST(request: Request) {
     const res = await fetch(webhook, {
       method: "POST",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ ...clean, preferences: clean.preferences.join(", "),
+      body: JSON.stringify({
+        ...clean,
+        // "preferences" stays joined so an older script still works; newer scripts use the split fields.
+        preferences: clean.preferences.join(", "),
+        preference1: clean.preferences[0] ?? "",
+        preference2: clean.preferences[1] ?? "",
         otherCareer: clean.otherCareers.filter(Boolean).join(", "),
-        otherCareers: undefined }),
+        otherCareers: undefined,
+      }),
       redirect: "follow",
     });
     if (!res.ok) throw new Error(`Webhook responded ${res.status}`);
