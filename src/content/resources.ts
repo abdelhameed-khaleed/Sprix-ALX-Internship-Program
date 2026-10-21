@@ -107,6 +107,14 @@ export const resources: Resource[] = [
     url: "https://docs.google.com/presentation/d/10OLHjODCbSVEE9aZwzMXtKOCzUgBckltnrzkhDooPFU/edit?slide=id.p1#slide=id.p1",
   },
   {
+    id: "week-4-offline-session-slides",
+    title: "Week 4 offline session slides",
+    description: "Presentation deck from the Week 4 offline workshop.",
+    category: "slides",
+    week: 4,
+    url: "https://docs.google.com/presentation/d/1FVjZobsuu7w7N29-YRuMYTROK64mCXHFbxSMlWJrNKA/edit?usp=sharing",
+  },
+  {
     id: "week-3-offline-session-slides",
     title: "Week 3 offline session slides",
     description: "Presentation deck from the Week 3 offline workshop, held by Aya El-Mahdy.",
