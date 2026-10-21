@@ -139,6 +139,14 @@ export const resources: Resource[] = [
     url: "https://docs.google.com/presentation/d/1zk4J0o3dVWS2gtTqCapl2EeFGBqAP1pMtLhwFXKYC4U/edit?usp=sharing",
   },
   {
+    id: "week-2-offline-session-slides",
+    title: "Week 2 offline session slides",
+    description: "Presentation deck from the Week 2 offline workshop.",
+    category: "slides",
+    week: 2,
+    url: "https://docs.google.com/presentation/d/1hiD2lVyZWre4Lv-vXUzS96JkP3iEtXn69oyQtE4sh_s/edit",
+  },
+  {
     id: "week-2-walkthrough-recording",
     title: "Week 2 walkthrough recording",
     description: "Recording of the Week 2 Tuesday walkthrough session.",
@@ -153,6 +161,14 @@ export const resources: Resource[] = [
     category: "slides",
     week: 2,
     url: "https://docs.google.com/presentation/d/1rNrktCdsiKT167cle5t9al3Ytq-5kFt6Dvc91b9vbB0/edit?usp=sharing",
+  },
+  {
+    id: "week-1-offline-session-slides",
+    title: "Week 1 offline session slides",
+    description: "Presentation deck from the Week 1 offline workshop.",
+    category: "slides",
+    week: 1,
+    url: "https://docs.google.com/presentation/d/1Nh0MPpP2FKeqhcfLbwsAtYQEPM1aGVb0YFS9MmviqnE",
   },
   {
     id: "week-1-walkthrough-recording",
