@@ -29,7 +29,7 @@ type PageProps = {
 function matchesWeek(week: number | "general", activeWeek: string): boolean {
   if (activeWeek === "general") return week === "general";
   if (activeWeek === "all") return true;
-  return week === Number(activeWeek) || week === "general";
+  return week === Number(activeWeek);
 }
 
 export default async function ResourcesPage({ searchParams }: PageProps) {
