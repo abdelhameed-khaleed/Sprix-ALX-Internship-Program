@@ -120,7 +120,7 @@ export const resources: Resource[] = [
     description: "Presentation deck from the Week 3 offline workshop, held by Aya El-Mahdy.",
     category: "slides",
     week: 3,
-    url: "https://canva.link/203t4bwhcfbxi",
+    url: "https://drive.google.com/file/d/12B2Wmal0q66aOjQizXYKSWc2oja6GNSj/view?usp=sharing",
   },
   {
     id: "week-3-walkthrough-recording",
