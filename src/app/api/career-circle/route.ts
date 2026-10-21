@@ -17,7 +17,9 @@ export async function POST(request: Request) {
     email: String(body.email ?? "").trim().slice(0, 200),
     whatsapp: String(body.whatsapp ?? "").trim().slice(0, 40),
     preferences: Array.isArray(body.preferences) ? body.preferences.map(String).slice(0, 5) : [],
-    otherCareer: String(body.otherCareer ?? "").trim().slice(0, 500),
+    otherCareers: (Array.isArray(body.otherCareers) ? body.otherCareers : [])
+      .slice(0, 2)
+      .map((c) => String(c ?? "").trim().slice(0, 100)),
   };
 
   const error = validateSubmission(clean);
@@ -32,7 +34,9 @@ export async function POST(request: Request) {
     const res = await fetch(webhook, {
       method: "POST",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ ...clean, preferences: clean.preferences.join(", ") }),
+      body: JSON.stringify({ ...clean, preferences: clean.preferences.join(", "),
+        otherCareer: clean.otherCareers.filter(Boolean).join(", "),
+        otherCareers: undefined }),
       redirect: "follow",
     });
     if (!res.ok) throw new Error(`Webhook responded ${res.status}`);

@@ -66,9 +66,11 @@ export function MobileNav({ isOpen, onClose, pathname, links }: MobileNavProps) 
                 onClick={onClose}
                 className={cx(
                   "flex min-h-11 items-center rounded-button px-4 py-3 text-base font-semibold transition-colors",
-                  isActive
-                    ? "bg-sky text-blue"
-                    : "text-ink hover:bg-surface-alt hover:text-blue"
+                  link.highlight
+                    ? "bg-blue text-white hover:bg-blue-dark"
+                    : isActive
+                      ? "bg-sky text-blue"
+                      : "text-ink hover:bg-surface-alt hover:text-blue"
                 )}
               >
                 {link.label}

@@ -163,16 +163,29 @@ export function Header() {
                   aria-current={isActive ? "page" : undefined}
                   className={cx(
                     "relative flex h-full items-center text-sm font-semibold transition-colors duration-200",
-                    transparent
-                      ? isActive
-                        ? "text-white"
-                        : "text-white/75 hover:text-white"
-                      : isActive
-                        ? "text-blue"
-                        : "text-ink hover:text-blue",
+                    link.highlight
+                      ? ""
+                      : transparent
+                        ? isActive
+                          ? "text-white"
+                          : "text-white/75 hover:text-white"
+                        : isActive
+                          ? "text-blue"
+                          : "text-ink hover:text-blue",
                   )}
                 >
-                  {link.label}
+                  {link.highlight ? (
+                    <span
+                      className={cx(
+                        "rounded-full px-3.5 py-1.5 transition-colors",
+                        transparent ? "bg-white text-navy hover:bg-sky" : "bg-blue text-white hover:bg-blue-dark",
+                      )}
+                    >
+                      {link.label}
+                    </span>
+                  ) : (
+                    link.label
+                  )}
                 </Link>
               );
             })}

@@ -8,7 +8,8 @@ export type CareerCircleSubmission = {
   email: string;
   whatsapp: string;
   preferences: string[];
-  otherCareer: string;
+  /** Up to two careers outside the current tracks; blanks allowed. */
+  otherCareers: string[];
 };
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

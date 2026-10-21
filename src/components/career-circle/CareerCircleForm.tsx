@@ -29,7 +29,7 @@ export function CareerCircleForm() {
       email: String(data.get("email") ?? ""),
       whatsapp: String(data.get("whatsapp") ?? ""),
       preferences,
-      otherCareer: String(data.get("otherCareer") ?? ""),
+      otherCareers: [String(data.get("otherCareer1") ?? ""), String(data.get("otherCareer2") ?? "")],
     };
 
     const problem = validateSubmission(submission);
@@ -131,15 +131,30 @@ export function CareerCircleForm() {
         </p>
       </fieldset>
 
-      <label className="mt-6 block text-sm font-semibold text-navy">
-        If your preference does not exist in the current careers, what would you choose?
-        <textarea
-          name="otherCareer"
-          rows={3}
-          placeholder="e.g. Cybersecurity, Graphic Design"
-          className={cx(inputClass, "resize-y")}
-        />
-      </label>
+      <fieldset className="mt-6">
+        <legend className="text-sm font-semibold text-navy">
+          If your preference does not exist in the current careers, what would you choose?{" "}
+          <span className="font-normal text-muted">(optional, up to two)</span>
+        </legend>
+        <div className="mt-2.5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <input
+            name="otherCareer1"
+            type="text"
+            maxLength={100}
+            aria-label="Other career 1"
+            placeholder="e.g. Cybersecurity"
+            className={cx(inputClass, "mt-0")}
+          />
+          <input
+            name="otherCareer2"
+            type="text"
+            maxLength={100}
+            aria-label="Other career 2"
+            placeholder="e.g. Graphic Design"
+            className={cx(inputClass, "mt-0")}
+          />
+        </div>
+      </fieldset>
 
       {error && (
         <p role="alert" className="mt-5 rounded-button bg-red-50 px-3.5 py-2.5 text-sm font-medium text-red-700">
