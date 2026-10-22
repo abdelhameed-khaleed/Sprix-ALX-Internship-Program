@@ -178,7 +178,7 @@ export default function ProgramPage() {
         id="timeline"
         eyebrow="Curriculum"
         title="Your 7-week journey"
-        intro="Select any week to pop its details forward: learning outcome, expert session topic, deliverable and this week's session links. Only one week is open at a time, and this week starts expanded."
+        intro="Select any week to pop its details forward: learning outcome, session topic, deliverable and this week's session links. Only one week is open at a time, and this week starts expanded."
       >
         <WeekTimeline weeks={weeks} currentWeekNumber={currentWeekNumber} nowIso={now.toISOString()} />
       </Section>

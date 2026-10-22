@@ -162,7 +162,7 @@ export function WeekCard({
 
             {week.expertSession && (
               <div className="flex flex-wrap items-baseline gap-2 pt-1">
-                <Badge tone="purple">Expert session</Badge>
+                <Badge tone="purple">Session</Badge>
                 <span className="font-medium text-navy">{week.expertSession}</span>
               </div>
             )}
@@ -189,7 +189,7 @@ export function WeekCard({
                 )}
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-semibold text-navy">{speaker.name}</p>
-                  <p className="text-xs text-muted">Guest speaker</p>
+                  <p className="text-xs text-muted">{speaker.talk ?? "Guest speaker"}</p>
                 </div>
                 {speaker.linkedin && (
                   <a

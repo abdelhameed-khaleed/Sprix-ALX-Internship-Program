@@ -6,6 +6,8 @@ export type ExpertSpeaker = {
   name: string;
   /** Omit when the speaker has no profile link yet; the LinkedIn icon is hidden. */
   linkedin?: string;
+  /** What this speaker covers in the session, e.g. "Data circle · 40 min". */
+  talk?: string;
   /** Path under /public, e.g. "/speakers/aya-shawky.jpg". Initials avatar is used when omitted. */
   photo?: string;
 };
@@ -116,25 +118,29 @@ export const weeks: Week[] = [
     summary: "Tech pathways & crafting your professional identity narrative.",
     outcome:
       "Explore technology-enabled career pathways and articulate a clear professional narrative aligned with personal strengths, values, and market opportunities.",
-    expertSession: "Career coaching",
+    expertSession: "Career Circle",
     expertSpeakers: [
       {
         name: "Omar Moneer",
         linkedin: "https://www.linkedin.com/in/omarmoneer/",
         photo: "/speakers/omar-moneer.jpg",
+        talk: "Data circle · 40 min",
       },
       {
         name: "Ahmed Mattar",
         linkedin: "https://www.linkedin.com/in/ahmed-mattar-a75b1b202/",
         photo: "/speakers/ahmed-mattar.jpg",
+        talk: "HR session · 45 min",
       },
       {
         name: "Abdelrhman Hany",
         photo: "/speakers/abdelrhman-hany.jpg",
+        talk: "Software engineering circle · 40 min",
       },
       {
         name: "Osama Seada",
         photo: "/speakers/osama-seada.jpg",
+        talk: "Product circle · 40 min",
       },
     ],
     icon: "compass",
