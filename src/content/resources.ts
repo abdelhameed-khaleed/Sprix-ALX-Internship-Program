@@ -64,16 +64,47 @@ export const resourceCategories: ResourceCategoryMeta[] = [
 export const resourceWeekCount = 5;
 
 export const resources: Resource[] = [
-  // Temporarily hidden: Session 1 photos & videos Drive link. Restore to show it again.
-  // {
-  //   id: "session-1-offline-photos",
-  //   title: "Session 1 offline photos & videos",
-  //   description: "Photos and videos from the Week 1 Friday offline session at the ALX Hub.",
-  //   category: "events",
-  //   week: 1,
-  //   url: "https://drive.google.com/drive/folders/1hrlnS6KqH9j85ursx45qCV3wplrAwRbT?usp=sharing",
-  //   image: "/media/events/session-1-offline.jpg",
-  // },
+  {
+    id: "session-1-offline-photos",
+    title: "Session 1 offline photos & videos",
+    description: "Photos and videos from the Week 1 Friday offline session at the ALX Hub.",
+    category: "events",
+    week: 1,
+    url: "https://drive.google.com/drive/folders/1hrlnS6KqH9j85ursx45qCV3wplrAwRbT?usp=drive_link",
+    image: "/media/events/session-1-offline.jpg",
+  },
+  {
+    id: "session-2-offline-photos",
+    title: "Session 2 offline photos & videos",
+    description: "Photos and videos from the Week 2 offline session at the ALX Hub.",
+    category: "events",
+    week: 2,
+    url: "https://drive.google.com/drive/folders/1HrePq5aSHQFHbMR0bNtglsxNYE_iqvek?usp=drive_link",
+  },
+  {
+    id: "session-3-offline-photos",
+    title: "Session 3 offline photos & videos",
+    description: "Photos and videos from the Week 3 offline session at the ALX Hub.",
+    category: "events",
+    week: 3,
+    url: "https://drive.google.com/drive/folders/10wukgq4WjnCu-vPmCF_c8HpbCSFd5nrP?usp=drive_link",
+  },
+  {
+    id: "session-4-offline-photos",
+    title: "Session 4 offline photos & videos",
+    description: "Photos and videos from the Week 4 offline session at the ALX Hub.",
+    category: "events",
+    week: 4,
+    url: "https://drive.google.com/drive/folders/1fFivXMROqmydB-fv_lPXU8mDoQW7osDg?usp=drive_link",
+  },
+  {
+    id: "karibu-onboarding-photos",
+    title: "Karibu onboarding photos & videos",
+    description: "Photos and videos from the Karibu onboarding session at the ALX Hub.",
+    category: "events",
+    week: 1,
+    url: "https://drive.google.com/drive/folders/1Fyilp29mJTngyCrJeWC6djxdOxZwb_x3?usp=drive_link",
+  },
   {
     id: "week-5-walkthrough-recording",
     title: "Week 5 walkthrough recording",
