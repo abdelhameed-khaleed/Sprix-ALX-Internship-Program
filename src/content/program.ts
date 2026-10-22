@@ -4,7 +4,8 @@ export type WeekIcon = "brain" | "chart" | "messages" | "users" | "compass" | "h
 
 export type ExpertSpeaker = {
   name: string;
-  linkedin: string;
+  /** Omit when the speaker has no profile link yet; the LinkedIn icon is hidden. */
+  linkedin?: string;
   /** Path under /public, e.g. "/speakers/aya-shawky.jpg". Initials avatar is used when omitted. */
   photo?: string;
 };
@@ -128,14 +129,12 @@ export const weeks: Week[] = [
         photo: "/speakers/ahmed-mattar.jpg",
       },
       {
-        name: "Manar Abotaleb",
-        linkedin: "https://www.linkedin.com/in/manarabotaleb/",
-        photo: "/speakers/manar-abotaleb.jpg",
+        name: "Abdelrhman Hany",
+        photo: "/speakers/abdelrhman-hany.jpg",
       },
       {
-        name: "Aya Hassan",
-        linkedin: "https://www.linkedin.com/in/aya-hassan-190988162/",
-        photo: "/speakers/aya-hassan.jpg",
+        name: "Osama Seada",
+        photo: "/speakers/osama-seada.jpg",
       },
     ],
     icon: "compass",

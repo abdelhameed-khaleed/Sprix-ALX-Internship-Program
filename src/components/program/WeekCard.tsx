@@ -191,15 +191,17 @@ export function WeekCard({
                   <p className="text-sm font-semibold text-navy">{speaker.name}</p>
                   <p className="text-xs text-muted">Guest speaker</p>
                 </div>
-                <a
-                  href={speaker.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="shrink-0 text-blue transition-colors hover:text-navy"
-                  aria-label={`${speaker.name} on LinkedIn (opens in a new tab)`}
-                >
-                  <LinkedInIcon className="size-5" />
-                </a>
+                {speaker.linkedin && (
+                  <a
+                    href={speaker.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="shrink-0 text-blue transition-colors hover:text-navy"
+                    aria-label={`${speaker.name} on LinkedIn (opens in a new tab)`}
+                  >
+                    <LinkedInIcon className="size-5" />
+                  </a>
+                )}
               </div>
             ))}
 
