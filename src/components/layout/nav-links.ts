@@ -12,5 +12,5 @@ export const NAV_LINKS: readonly NavItem[] = [
   { href: "/resources", label: "Resources" },
   { href: "/leaderboard", label: "Leaderboard" },
   { href: "/support", label: "Support" },
-  { href: "/career-circle", label: "Career Circle", highlight: true },
+  { href: "/final-demo-day", label: "Final Demo Day", highlight: true },
 ];
