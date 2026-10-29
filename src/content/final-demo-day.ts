@@ -16,14 +16,34 @@ export const demoDay = {
     "Your team is simulating a real business with a real solution. Your slides are how you convince the audience to back it.",
   mission: {
     title: "Your mission",
-    description:
-      "Build a deck of 8 to 12 slides that tells your business story in four parts: the global challenge you chose, one specific problem, the real person affected, and your solution shown with wireframes or a prototype.",
+    intro:
+      "Your team is simulating a real business with a real solution, and your slides tell its story in four parts.",
+    parts: [
+      {
+        title: "GCGO",
+        description: "The big world challenge or opportunity we chose.",
+      },
+      {
+        title: "Problem",
+        description: "One specific problem inside that GCGO.",
+      },
+      {
+        title: "Persona",
+        description: "The real person affected by the problem.",
+      },
+      {
+        title: "Solution",
+        description: "Our idea, shown with wireframes or a prototype.",
+      },
+    ] as DemoDayItem[],
+    closing:
+      "Build a deck of 8 to 12 slides that covers every part. A part can use more than one slide if needed. Treat it like a real pitch: a real problem, a real person, a real idea.",
   },
   details: [
+    { label: "Demo day", value: "Friday, November 6, 2026" },
     { label: "Submit by", value: "Thursday, November 5, 2026 at 6:00 PM" },
     { label: "Arrive", value: "10 to 15 minutes before your start time" },
-    { label: "Presentation length", value: "4 minutes presenting, then 3 minutes for questions and feedback" },
-    { label: "Date", value: "" },
+    { label: "Presentation length", value: "4 minutes presenting, then 4 minutes feedback" },
     { label: "Time", value: "" },
     { label: "Venue", value: "" },
   ] as DemoDayDetail[],
@@ -54,7 +74,7 @@ export const demoDay = {
     },
     {
       title: "Rehearse with a timer",
-      description: "Practise the 4-minute presentation, then 3 minutes of questions.",
+      description: "Practise the 4-minute presentation, then 4 minutes of feedback.",
     },
   ] as DemoDayItem[],
   slideStructure: [
@@ -67,14 +87,16 @@ export const demoDay = {
     { title: "What makes it different", description: "What people use today, your competitors, and how your idea does better or differently." },
     { title: "Closing", description: "The next 3 steps if the business goes ahead, a strong last line and a thank you." },
   ] as DemoDayItem[],
-  designRules: [
-    "One idea per slide, with 3 bullets at most.",
-    "Big text (24 pt or more), with the same font and colours on every slide.",
-    "Use pictures, icons and big numbers instead of long sentences.",
-    "Put a small source line under every fact or number.",
-    "Check that every picture matches its words, especially AI-made ones.",
-    "Free pictures: Pexels, Unsplash, Pixabay and Flaticon.",
-  ],
+  prizes: [
+    {
+      title: "Best overall presentation",
+      description: "Awarded to the team that presents most clearly, confidently and with the best-prepared slides.",
+    },
+    {
+      title: "Most innovative solution",
+      description: "Awarded to the team with the fresh, useful idea that stands out the most.",
+    },
+  ] as DemoDayItem[],
   judging: [
     {
       title: "The slides",
@@ -89,9 +111,10 @@ export const demoDay = {
       description: "How clearly, well prepared and confidently your team presents.",
     },
   ] as DemoDayItem[],
-  importantNotes: [
-    "Create a new folder in the shared Google Drive named with your team name, and upload your slides or add the link inside it.",
-    "Judges' questions are optional. Use the 3 minutes to answer them and to listen to feedback.",
-  ],
-  contactUrl: "",
+  submission: {
+    title: "How to submit",
+    description:
+      "Create a new folder inside the shared parent folder, named with your team name. Upload your slides into it, or add a link to your presentation. Submit by Thursday, November 5 at 6:00 PM.",
+    folderUrl: "https://drive.google.com/drive/folders/1xrogypXAGRiHVWzwZHy2_VKnCrfQzCqH?usp=sharing",
+  },
 };

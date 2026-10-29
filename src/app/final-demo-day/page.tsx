@@ -1,24 +1,25 @@
 import type { Metadata } from "next";
-import { CalendarDays, CheckCircle2, Clock, MapPin, Scale, Sparkles, Timer, Trophy, Presentation } from "lucide-react";
-import { IconTile, PageHero, Section } from "@/components/ui";
+import { CalendarDays, Clock, FolderUp, MapPin, Scale, Sparkles, Timer, Trophy, Presentation } from "lucide-react";
+import { ButtonLink, IconTile, PageHero, Section } from "@/components/ui";
 import { demoDay } from "@/content/final-demo-day";
 import { Reveal } from "@/components/motion/Reveal";
 
 export const metadata: Metadata = {
   title: "Final Demo Day",
-  description: "Everything you need to know about the ALX × SPRIX Final Demo Day: the mission, slide structure, steps, rules and judging.",
+  description: "Everything you need to know about the ALX × SPRIX Final Demo Day: the mission, slide structure, steps, prizes, judging and how to submit.",
 };
 
 const detailIcons: Record<string, typeof CalendarDays> = {
+  "Demo day": CalendarDays,
   "Submit by": Clock,
   Arrive: Timer,
   "Presentation length": Presentation,
-  Date: CalendarDays,
   Time: Clock,
   Venue: MapPin,
 };
 
 const judgingIcons = [Presentation, Sparkles, Trophy];
+const prizeIcons = [Trophy, Sparkles];
 
 // Brand-safe tints for cards: all pastel backgrounds with navy text.
 const tints = ["bg-sky", "bg-icy/60", "bg-lavender", "bg-lime/70", "bg-jasmine/70", "bg-sky"];
@@ -50,20 +51,29 @@ export default function FinalDemoDayPage() {
             );
           })}
         </div>
-        {details.length === 0 && <p className="text-ink">Date, time and venue are being finalised. Check back soon.</p>}
       </Section>
 
-      {/* Mission */}
+      {/* Mission, rewritten from the guide */}
       <Section id="mission" tone="alt" eyebrow="The brief" title={demoDay.mission.title}>
         <Reveal>
           <div className="relative overflow-hidden rounded-card bg-navy p-8 text-white shadow-e2 sm:p-10">
             <Sparkles aria-hidden="true" className="absolute top-6 right-6 size-16 text-icy/30" />
-            <p className="max-w-3xl text-lg leading-relaxed text-white/90 sm:text-xl">{demoDay.mission.description}</p>
+            <p className="max-w-3xl text-lg leading-relaxed text-white/90 sm:text-xl">{demoDay.mission.intro}</p>
+            <ol className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {demoDay.mission.parts.map((part, idx) => (
+                <li key={idx} className="rounded-button bg-white/10 p-5">
+                  <p className="text-xs font-bold tracking-wider text-icy uppercase">Part {idx + 1}</p>
+                  <h3 className="mt-1 text-xl font-bold text-white">{part.title}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-white/85">{part.description}</p>
+                </li>
+              ))}
+            </ol>
+            <p className="mt-8 max-w-3xl text-base leading-relaxed text-white/85">{demoDay.mission.closing}</p>
           </div>
         </Reveal>
       </Section>
 
-      {/* Slide structure, now before the steps */}
+      {/* Slide structure */}
       <Section id="slides" tone="white" eyebrow="Your deck" title="What goes on the slides" intro="Eight to twelve slides. A part can take more than one slide if needed.">
         <ol className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {demoDay.slideStructure.map((slide, idx) => (
@@ -99,17 +109,23 @@ export default function FinalDemoDayPage() {
         </ol>
       </Section>
 
-      {/* Design rules */}
-      <Section id="design" tone="white" eyebrow="Design" title="Design rules">
-        <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          {demoDay.designRules.map((rule, idx) => (
-            <Reveal key={idx} delay={idx * 40}>
-              <li className="flex items-start gap-3 rounded-button border border-line bg-sky/50 px-4 py-3.5 transition-colors duration-200 hover:bg-icy/60">
-                <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-blue" aria-hidden="true" />
-                <span className="text-ink">{rule}</span>
-              </li>
-            </Reveal>
-          ))}
+      {/* Prizes */}
+      <Section id="prizes" tone="white" eyebrow="Prizes" title="What we are awarding">
+        <ul className="grid grid-cols-1 gap-5 md:grid-cols-2">
+          {demoDay.prizes.map((prize, idx) => {
+            const Icon = prizeIcons[idx] ?? Trophy;
+            return (
+              <Reveal key={idx} delay={idx * 60}>
+                <li className={`group flex h-full items-start gap-5 rounded-card border border-line p-8 shadow-e1 transition-[box-shadow,transform] duration-300 hover:-translate-y-1 hover:shadow-e2 ${tints[idx % tints.length]}`}>
+                  <Icon className="size-10 shrink-0 text-blue transition-transform duration-300 group-hover:rotate-6" aria-hidden="true" />
+                  <div>
+                    <h3 className="text-xl font-bold text-navy">{prize.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-ink/80">{prize.description}</p>
+                  </div>
+                </li>
+              </Reveal>
+            );
+          })}
         </ul>
       </Section>
 
@@ -131,16 +147,21 @@ export default function FinalDemoDayPage() {
         </ul>
       </Section>
 
-      {/* Submission and logistics notes */}
-      <Section id="notes" tone="navy" eyebrow="Submission" title="Good to know">
-        <ul className="max-w-3xl space-y-4">
-          {demoDay.importantNotes.map((note, idx) => (
-            <li key={idx} className="flex items-start gap-3 text-white/90">
-              <span aria-hidden="true" className="mt-2.5 size-2 shrink-0 rounded-full bg-icy" />
-              <span className="text-lg">{note}</span>
-            </li>
-          ))}
-        </ul>
+      {/* How to submit */}
+      <Section id="submit" tone="navy" eyebrow="Submission" title={demoDay.submission.title}>
+        <Reveal>
+          <div className="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-start gap-5">
+              <IconTile tone="blue">
+                <FolderUp className="size-6 text-navy" aria-hidden="true" />
+              </IconTile>
+              <p className="max-w-2xl text-lg leading-relaxed text-white/90">{demoDay.submission.description}</p>
+            </div>
+            <ButtonLink href={demoDay.submission.folderUrl} external variant="inverse" className="shrink-0">
+              Open the Drive folder
+            </ButtonLink>
+          </div>
+        </Reveal>
       </Section>
     </>
   );
