@@ -116,5 +116,7 @@ export const demoDay = {
     description:
       "Create a new folder inside the shared parent folder, named with your team name. Upload your slides into it, or add a link to your presentation. Submit by Thursday, November 5 at 6:00 PM.",
     folderUrl: "https://drive.google.com/drive/folders/1xrogypXAGRiHVWzwZHy2_VKnCrfQzCqH?usp=sharing",
+    // Cairo time (UTC+2, no daylight saving in November).
+    deadlineIso: "2026-11-05T18:00:00+02:00",
   },
 };
