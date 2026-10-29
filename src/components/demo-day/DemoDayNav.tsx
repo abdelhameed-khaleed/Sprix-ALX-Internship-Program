@@ -72,7 +72,7 @@ export function DemoDayNav({ sections }: { sections: DemoDayNavSection[] }) {
       {/* Phones and tablets: sticky chip row */}
       <nav
         aria-label="On this page"
-        className="sticky top-16 z-20 border-b border-line bg-white/95 backdrop-blur-md lg:hidden"
+        className="sticky top-16 z-20 border-b border-line bg-white/95 backdrop-blur-md xl:hidden"
       >
         <ul className="flex gap-2 overflow-x-auto px-4 py-2.5">
           {sections.map((section, idx) => {
@@ -99,9 +99,9 @@ export function DemoDayNav({ sections }: { sections: DemoDayNavSection[] }) {
       {/* Desktop: floating rail on the left edge, labels appear on hover or focus */}
       <nav
         aria-label="On this page"
-        className="fixed top-1/2 left-3 z-30 hidden -translate-y-1/2 lg:left-5 lg:block xl:left-8"
+        className="fixed top-1/2 left-4 z-30 hidden -translate-y-1/2 xl:left-6 xl:block 2xl:left-10"
       >
-        <ul className="flex flex-col gap-3 rounded-full border border-line bg-white/90 p-2 shadow-e2 backdrop-blur-md">
+        <ul className="flex w-56 flex-col gap-1.5 rounded-card border border-line bg-white/95 p-2.5 shadow-e2 backdrop-blur-md">
           {sections.map((section, idx) => {
             const isActive = section.id === activeId;
             return (
@@ -113,7 +113,10 @@ export function DemoDayNav({ sections }: { sections: DemoDayNavSection[] }) {
                 >
                   {numberBadge(idx, isActive)}
                   <span
-                    className="pointer-events-none absolute left-10 origin-left rounded-button bg-navy px-3 py-1.5 text-sm font-semibold whitespace-nowrap text-white opacity-0 shadow-e2 transition-all duration-200 ease-out group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100 -translate-x-2"
+                    className={[
+                      "ml-3 whitespace-nowrap text-sm font-semibold transition-colors duration-300",
+                      isActive ? "text-blue" : "text-navy group-hover:text-blue",
+                    ].join(" ")}
                   >
                     {section.label}
                   </span>
