@@ -44,16 +44,11 @@ export default function FinalDemoDayPage() {
     <>
       <PageHero eyebrow="Final Demo Day" title="Final Demo Day" intro={demoDay.intro} />
 
-      <div className="px-4 sm:px-6 lg:grid lg:grid-cols-[230px_minmax(0,1fr)] lg:gap-10 lg:px-0 xl:gap-14">
-        <div className="lg:contents">
-          <div className="lg:col-start-1 lg:row-start-1">
-            <DemoDayNav sections={pageSections} />
-          </div>
-        </div>
+      <DemoDayNav sections={pageSections} />
 
-        <div className="-mx-4 min-w-0 sm:-mx-6 lg:mx-0">
+      <div>
           {/* Key dates, live countdown and rules */}
-          <Section id="details" tone="white" eyebrow="At a glance" title="Key details" className="scroll-mt-40 lg:scroll-mt-32">
+          <Section id="details" tone="white" eyebrow="At a glance" title="Key details" className="scroll-mt-24">
             <Reveal>
               <div className="mb-8">
                 <Countdown deadlineIso={demoDay.submission.deadlineIso} label="Submissions close in" />
@@ -80,7 +75,7 @@ export default function FinalDemoDayPage() {
           </Section>
 
           {/* Mission, rewritten from the guide */}
-          <Section id="mission" tone="alt" eyebrow="The brief" title={demoDay.mission.title} className="scroll-mt-40 lg:scroll-mt-32">
+          <Section id="mission" tone="alt" eyebrow="The brief" title={demoDay.mission.title} className="scroll-mt-24">
             <Reveal>
               <div className="relative overflow-hidden rounded-card bg-navy p-8 text-white shadow-e2 sm:p-10">
                 <Sparkles aria-hidden="true" className="absolute top-6 right-6 size-16 text-icy/30 motion-safe:animate-pulse" />
@@ -100,7 +95,7 @@ export default function FinalDemoDayPage() {
           </Section>
 
           {/* Slide structure */}
-          <Section id="slides" tone="white" eyebrow="Your deck" title="What goes on the slides" intro="Eight to twelve slides. A part can take more than one slide if needed." className="scroll-mt-40 lg:scroll-mt-32">
+          <Section id="slides" tone="white" eyebrow="Your deck" title="What goes on the slides" intro="Eight to twelve slides. A part can take more than one slide if needed." className="scroll-mt-24">
             <ol className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
               {demoDay.slideStructure.map((slide, idx) => (
                 <Reveal key={idx} delay={idx * 50}>
@@ -117,7 +112,7 @@ export default function FinalDemoDayPage() {
           </Section>
 
           {/* Steps */}
-          <Section id="steps" tone="alt" eyebrow="Steps" title="How to get there" className="scroll-mt-40 lg:scroll-mt-32">
+          <Section id="steps" tone="alt" eyebrow="Steps" title="How to get there" className="scroll-mt-24">
             <ol className="relative grid grid-cols-1 gap-5 md:grid-cols-2">
               {demoDay.steps.map((step, idx) => (
                 <Reveal key={idx} delay={idx * 40}>
@@ -136,7 +131,7 @@ export default function FinalDemoDayPage() {
           </Section>
 
           {/* Prizes */}
-          <Section id="prizes" tone="white" eyebrow="Prizes" title="What we are awarding" className="scroll-mt-40 lg:scroll-mt-32">
+          <Section id="prizes" tone="white" eyebrow="Prizes" title="What we are awarding" className="scroll-mt-24">
             <ul className="grid grid-cols-1 gap-5 md:grid-cols-2">
               {demoDay.prizes.map((prize, idx) => {
                 const Icon = prizeIcons[idx] ?? Trophy;
@@ -156,7 +151,7 @@ export default function FinalDemoDayPage() {
           </Section>
 
           {/* Judging */}
-          <Section id="judging" tone="alt" eyebrow="Judging" title="How you will be judged" className="scroll-mt-40 lg:scroll-mt-32">
+          <Section id="judging" tone="alt" eyebrow="Judging" title="How you will be judged" className="scroll-mt-24">
             <ul className="grid grid-cols-1 gap-5 md:grid-cols-3">
               {demoDay.judging.map((item, idx) => {
                 const Icon = judgingIcons[idx] ?? Scale;
@@ -174,7 +169,7 @@ export default function FinalDemoDayPage() {
           </Section>
 
           {/* How to submit */}
-          <Section id="submit" tone="navy" eyebrow="Submission" title={demoDay.submission.title} className="scroll-mt-40 lg:scroll-mt-32">
+          <Section id="submit" tone="navy" eyebrow="Submission" title={demoDay.submission.title} className="scroll-mt-24">
             <Reveal>
               <div className="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
                 <div className="flex items-start gap-5">
@@ -189,7 +184,6 @@ export default function FinalDemoDayPage() {
               </div>
             </Reveal>
           </Section>
-        </div>
       </div>
     </>
   );
