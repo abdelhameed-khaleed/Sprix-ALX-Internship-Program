@@ -111,6 +111,20 @@ export const demoDay = {
       description: "How clearly, well prepared and confidently your team presents.",
     },
   ] as DemoDayItem[],
+  judges: [
+    {
+      name: "Mohamed Abdel Moniem",
+      role: "Regional Director, North Africa",
+      organisation: "ALX Africa",
+      photo: "/judges/moniem.jpg",
+    },
+    {
+      name: "Aalaa Abdelfadil",
+      role: "Learning Manager",
+      organisation: "ALX North Africa",
+      photo: "/team/aalaa.jpg",
+    },
+  ] as { name: string; role: string; organisation: string; photo: string }[],
   submission: {
     title: "How to submit",
     description:

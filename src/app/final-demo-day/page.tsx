@@ -34,6 +34,7 @@ const pageSections = [
   { id: "steps", label: "How to get there" },
   { id: "prizes", label: "Prizes" },
   { id: "judging", label: "How you will be judged" },
+  { id: "judges", label: "Meet your judges" },
   { id: "submit", label: "How to submit" },
 ];
 
@@ -165,6 +166,32 @@ export default function FinalDemoDayPage() {
                   </Reveal>
                 );
               })}
+            </ul>
+          </Section>
+
+          {/* Meet your judges */}
+          <Section id="judges" tone="white" eyebrow="The panel" title="Meet your judges" intro="The people who will watch your pitch and ask the hard questions." className="scroll-mt-24">
+            <ul className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              {demoDay.judges.map((judge, idx) => (
+                <Reveal key={judge.name} delay={idx * 80}>
+                  <li className="group flex h-full items-center gap-6 overflow-hidden rounded-card border border-line bg-surface p-6 shadow-e1 transition-[box-shadow,transform] duration-300 hover:-translate-y-1 hover:shadow-e2 sm:p-8">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={judge.photo}
+                      alt={`Photo of ${judge.name}`}
+                      className="size-28 shrink-0 rounded-full border-4 border-icy object-cover shadow-e2 transition-transform duration-300 group-hover:scale-105 sm:size-32"
+                    />
+                    <div className="min-w-0">
+                      <span className="inline-block rounded-full bg-lavender px-3 py-1 text-xs font-bold tracking-wider text-navy uppercase">
+                        Judge
+                      </span>
+                      <h3 className="mt-3 text-xl font-bold text-navy">{judge.name}</h3>
+                      <p className="mt-1 text-sm font-semibold text-blue">{judge.role}</p>
+                      <p className="text-sm text-muted">{judge.organisation}</p>
+                    </div>
+                  </li>
+                </Reveal>
+              ))}
             </ul>
           </Section>
 
